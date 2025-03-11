@@ -18,7 +18,8 @@ void (kbc_ih)(void) {
     //checking if there's data to be read
     
     //Read Output Buffer
-    
+    uint8_t read_code;
+    if (util_sys_inb(OUT_BUF,read_code) !=0) return;
 
     //Error Handling
 
