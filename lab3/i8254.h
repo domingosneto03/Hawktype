@@ -52,6 +52,16 @@
 #define TIMER_RB_STATUS_ BIT(4)
 #define TIMER_RB_SEL(n)  BIT((n) + 1)
 
+/* KEYBOARD LAB */
+
+#define DELAY_US    20000
+tickdelay(micros_to_ticks(DELAY_US));
+
+#define OUT_BUF 0x60
+#define IN_BUT 0x64
+#define STATUS_REG 0x64
+#define READ_COMMAND_BYTE 0x20
+#define WRITE_COMMAND_BYTE 0x60
 
 /**@}*/
 
