@@ -92,7 +92,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st,
 
       {
       uint8_t x = (uint8_t)((st >> 4) & 0x03);
-      //0011
+      //0111
       if (x==1) timer_data.in_mode = LSB_only;
       else if (x==2) timer_data.in_mode = MSB_only;
       else if (x==3) timer_data.in_mode = MSB_after_LSB;

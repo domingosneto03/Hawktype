@@ -18,5 +18,5 @@ int (keyboard_unsubscribe_int)() {
 
 
 void (kbc_ih)(){
-    if (get_kbc_output(&cur_scancode)!=0) perror("error getting output\n");
+    if (get_kbc_output(&cur_scancode, 0)!=0) perror("error getting output\n");
 }
