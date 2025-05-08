@@ -172,6 +172,7 @@ int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
             mouse_byte_syncing();
             if (byte_index==3){
               mouse_bytes_to_packet(); 
+              mouse_print_packet(&mouse_packet);
               state_machine_update(x_len, tolerance);
               byte_index = 0;
             }

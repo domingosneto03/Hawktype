@@ -24,6 +24,8 @@
 #define IRQ_KEYBOARD 1
 #define IRQ_MOUSE 12
 
+/* MOUSE LAB */
+
 #define MOUSE_LEFT_BUTTON BIT(0)
 #define MOUSE_RIGHT_BUTTON BIT(1)
 #define MOUSE_MIDDLE_BUTTON BIT(2)
@@ -32,6 +34,9 @@
 #define NEGATIVE_Y BIT(5)
 #define OVERFLOW_X BIT(6)
 #define OVERFLOW_Y BIT(7)
+
+#define MOUSE_REQUEST 0xD4
+
 
 
 /**@}*/

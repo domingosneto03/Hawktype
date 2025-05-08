@@ -111,16 +111,16 @@ void (state_machine_update)(uint8_t x_len,uint8_t tolarance){
             cur_state = START;
             x_movement = 0;
             y_movement = 0;
+            break;
           }
           if(mouse_packet.delta_y < 0 && abs(mouse_packet.delta_y) > tolarance){
             cur_state = START;
             x_movement = 0;
             y_movement = 0;
+            break;
           }
-          else{
-            x_movement += mouse_packet.delta_x;
-            y_movement += mouse_packet.delta_y;
-          }
+          x_movement += mouse_packet.delta_x;
+          y_movement += mouse_packet.delta_y;
         }
       }
     }
@@ -156,16 +156,17 @@ void (state_machine_update)(uint8_t x_len,uint8_t tolarance){
             cur_state = START;
             x_movement = 0;
             y_movement = 0;
+            break;
           }
           if(mouse_packet.delta_y > 0 && abs(mouse_packet.delta_y) > tolarance){
             cur_state = START;
             x_movement = 0;
             y_movement = 0;
+            break;
           }
-          else{
-            x_movement += mouse_packet.delta_x;
-            y_movement += mouse_packet.delta_y;
-          }
+          x_movement += mouse_packet.delta_x;
+          y_movement += mouse_packet.delta_y;
+
         }
       }
     }
@@ -175,4 +176,8 @@ void (state_machine_update)(uint8_t x_len,uint8_t tolarance){
       return;
     break;
   }
+}
+
+int (mouse_comunicating)(uint8_t input){
+  return 0;
 }

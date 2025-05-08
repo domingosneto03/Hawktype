@@ -18,4 +18,6 @@ void (mouse_bytes_to_packet)();
 
 void (state_machine_update)(uint8_t x_len,uint8_t tolarance);
 
+int (mouse_comunicating)(uint8_t input);
+
 #endif

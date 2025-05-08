@@ -64,6 +64,9 @@
     "ios": "c",
     "limits": "c",
     "memory": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "sysutil.h": "c",
+    "kbc.h": "c",
+    "keyboard.h": "c"
   }
 }
