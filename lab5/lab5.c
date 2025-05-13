@@ -285,3 +285,10 @@ int(video_test_controller)() {
 
   return 1;
 }
+
+
+struct words
+{
+  palavra = "palavra";
+  state = correct/wrong/notchecked
+};

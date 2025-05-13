@@ -67,6 +67,7 @@
     "type_traits": "c",
     "sysutil.h": "c",
     "kbc.h": "c",
-    "keyboard.h": "c"
+    "keyboard.h": "c",
+    "MAIN.C": "cpp"
   }
 }
