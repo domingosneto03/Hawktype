@@ -1,13 +1,4 @@
-<<<<<<< HEAD
 {
-  "git.ignoreLimitWarning": true,
-  "C_Cpp.clang_format_fallbackStyle": "LLVM",
-  "diffEditor.ignoreTrimWhitespace": true,
-  "editor.formatOnSave": false,
-  "editor.tabSize": 2,
-  "editor.wordWrap": "bounded",
-  "editor.wordWrapColumn": 100,
-  "files.associations": {},
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
@@ -64,16 +55,19 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
-=======
-{
-  "git.ignoreLimitWarning": true,
-  "C_Cpp.clang_format_fallbackStyle": "LLVM",
-  "diffEditor.ignoreTrimWhitespace": true,
-  "editor.formatOnSave": false,
-  "editor.tabSize": 2,
-  "editor.wordWrap": "bounded",
-  "editor.wordWrapColumn": 100,
-  "files.associations": { },
->>>>>>> main
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
+  "files.associations": {
+    "locale": "c",
+    "string": "c",
+    "__locale": "c",
+    "atomic": "c",
+    "ios": "c",
+    "limits": "c",
+    "memory": "c",
+    "type_traits": "c",
+    "sysutil.h": "c",
+    "kbc.h": "c",
+    "keyboard.h": "c",
+    "MAIN.C": "cpp"
+  }
 }
