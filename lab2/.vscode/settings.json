@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "git.ignoreLimitWarning": true,
   "C_Cpp.clang_format_fallbackStyle": "LLVM",
@@ -64,4 +65,15 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false
+=======
+{
+  "git.ignoreLimitWarning": true,
+  "C_Cpp.clang_format_fallbackStyle": "LLVM",
+  "diffEditor.ignoreTrimWhitespace": true,
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 100,
+  "files.associations": { },
+>>>>>>> main
 }
