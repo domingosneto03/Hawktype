@@ -9,9 +9,7 @@
 #include "graphics.h"
 #include "timer.c"
 #include "i8254.h"
-#include "text.h"
 
-extern int draw_text(const char* str, uint16_t x, uint16_t y, uint32_t color);
 
 
 extern uint8_t cur_scancode;
@@ -37,6 +35,18 @@ struct words word_list[5] = {
     { "are",   NOTCHECKED },
     { "you",   NOTCHECKED }
 };
+
+int draw_text(const char* str, uint16_t x, uint16_t y, uint32_t color) {
+    int spacing = 10;
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        char c = str[i];
+        if (c != ' ') {
+            draw_char(x + i * spacing, y, c, color);
+        }
+    }
+    return 0;
+}
+
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -188,11 +198,32 @@ int (word_checker)(int n){
 int draw_initial_screen() {
     if (set_frame_buffer(0x114) != 0) return 1;
     if (set_graphic_mode(0x114) != 0) return 1;
-    draw_text("HawkType", 10, 10, 0xFFFFFF); // white
-    draw_text("the quick brown fox jumps over the lazy dog", 100, 200, 0xCCCCCC); // light gray
+
+    // Title
+    draw_text("HawkType", 10, 10, 0xFFFFFF);
+
+    // Phrase: horizontal layout
+    int x = 100;
+    int y = 100;
+    for (int i = 0; i < 5; i++) {
+        uint32_t color = 0xCCCCCC; // default gray
+        switch (word_list[i].state) {
+            case CORRECT:  color = 0x00FF00; break; // green
+            case WRONG:    color = 0xFF0000; break; // red
+            case NOTCHECKED: default: break;
+        }
+        draw_text(word_list[i].word, x, y, color);
+        x += strlen(word_list[i].word) * 10 + 15; // 10 px per char, + space
+    }
+
+    // Textbox background
+    draw_rectangle(100, 140, 300, 20, 0x999999); // gray box
+
+    // Show currently typed word
+    draw_text(cur_typed_word, 105, 145, 0xFFFFFF); // inside box
+
     return 0;
 }
-
 
 
 int (main_interrupt_handler)(){
@@ -228,8 +259,6 @@ int (main_interrupt_handler)(){
 
                     uint8_t make;
                     //int num_bytes; 
-                    int scan_handler;
-                    int wrong_word;
 
                     if((cur_scancode & BREAK_CODE) == 0) make = 1;
                     else make = 0;
@@ -238,28 +267,34 @@ int (main_interrupt_handler)(){
                     // if(cur_scancode == TWO_BYTE_CODE) num_bytes = 2;
                     // else num_bytes = 1;
 
-                    if(make){
-                        scan_handler = code_to_word();
-                        if(scan_handler == -1){
+                    if (make) {
+                        int scan_handler = code_to_word();
+
+                        if (scan_handler == -1) {
                             printf("Word size limit reached.");
                         }
-                        scan_handler = 1;
-                        //caso seja um espaço
-                        if(scan_handler == 1){
-                            //checkar se a palavra tava certa
-                            wrong_word = word_checker(cur_word_count);
-                            if(wrong_word==0){
+
+                        // SPACE key was pressed
+                        if (scan_handler == 1) {
+                            int wrong_word = word_checker(cur_word_count);
+
+                            if (wrong_word == 0) {
+                                word_list[cur_word_count].state = CORRECT;
                                 correct_words++;
-                            }
-                            else{
+                            } else {
+                                word_list[cur_word_count].state = WRONG;
                                 wrong_words++;
                             }
-                            //limpar palavra
-                            memset(cur_typed_word,0,sizeof(cur_typed_word));
-                            //cur_typed_word[0] = '\0';
+
                             cur_word_count++;
+                            memset(cur_typed_word, 0, sizeof(cur_typed_word));
                         }
+
+                        // Update screen (textbox + phrase)
+                        draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
+                        draw_initial_screen();
                     }
+
                     
 
                 }
