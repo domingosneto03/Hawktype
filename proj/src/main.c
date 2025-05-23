@@ -6,11 +6,17 @@
 
 #include "i8042.h"
 #include "keyboard.h"
+#include "graphics.h"
 #include "timer.c"
 #include "i8254.h"
+#include "text.h"
+
+extern int draw_text(const char* str, uint16_t x, uint16_t y, uint32_t color);
+
 
 extern uint8_t cur_scancode;
 char cur_typed_word[MAX_WORD_SIZE] = "";
+
 
 
 enum wordstate{
@@ -179,6 +185,15 @@ int (word_checker)(int n){
     }
 }
 
+int draw_initial_screen() {
+    if (set_frame_buffer(0x114) != 0) return 1;
+    if (set_graphic_mode(0x114) != 0) return 1;
+    draw_text("HawkType", 10, 10, 0xFFFFFF); // white
+    draw_text("the quick brown fox jumps over the lazy dog", 100, 200, 0xCCCCCC); // light gray
+    return 0;
+}
+
+
 
 int (main_interrupt_handler)(){
 
@@ -194,7 +209,10 @@ int (main_interrupt_handler)(){
 
     if (keyboard_subscribe_int(&irq_keyboard)!=0) return 1;
 
-    while(cur_word_count < total_words) {
+    draw_initial_screen();
+
+    
+    while(cur_word_count < total_words && cur_scancode != BREAK_ESQ) {
 
         int r;
         if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
@@ -257,6 +275,7 @@ int (main_interrupt_handler)(){
     printf("wrong words: %d\n", wrong_words);
     printf("correct words: %d\n", correct_words);
 
+    vg_exit();
     if (keyboard_unsubscribe_int()!=0) return 1;
     return 0;
 }

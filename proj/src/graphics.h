@@ -1,5 +1,5 @@
-#ifndef _LCOM_GRAPHICS_
-#define _LCOM_GRAPHICS_
+#ifndef _GRAPHICS_H_
+#define _GRAPHICS_H_
 
 #include <minix/sysutil.h>
 #include "i8042.h"
@@ -22,5 +22,7 @@ int (indexed_mode_color)(uint16_t col, uint16_t row, uint8_t step, uint32_t firs
 int (direct_mode)(int j, int i, uint32_t first, uint8_t step, uint32_t *color);
 
 int (xpm_image_to_screen)(xpm_map_t xmp, uint16_t x, uint16_t y);
+
+int (draw_char)(uint16_t x, uint16_t y, char c, uint32_t color);
 
 #endif
