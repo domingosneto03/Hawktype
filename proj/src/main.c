@@ -203,27 +203,49 @@ int draw_initial_screen() {
 
 
     // Title
-    draw_text("HawkType", 10, 10, 0xFFFFFF);
+    draw_text("HawkType", 10, 10, 0xF5F5F5);
 
-    // Phrase: horizontal layout
-    int x = 100;
-    int y = 100;
+   // Determine total width of phrase
+    int total_len = 0;
     for (int i = 0; i < 5; i++) {
-        uint32_t color = 0xCCCCCC; // default gray
+        total_len += strlen(word_list[i].word);
+    }
+    int total_width = total_len * 10 + (5 - 1) * 15;
+
+    int x = (cur_mode_info.XResolution - total_width) / 2;
+    int y = 200; // middle of the screen, adjust as needed
+
+    for (int i = 0; i < 5; i++) {
+        // Phrase word color
+        uint32_t color = 0xE0E0E0; // new default
         switch (word_list[i].state) {
-            case CORRECT:  color = 0x00FF00; break; // green
-            case WRONG:    color = 0xFF0000; break; // red
+            case CORRECT:  color = 0x00FF00; break;
+            case WRONG:    color = 0xFF0000; break;
             case NOTCHECKED: default: break;
         }
+
         draw_text(word_list[i].word, x, y, color);
-        x += strlen(word_list[i].word) * 10 + 15; // 10 px per char, + space
+        x += strlen(word_list[i].word) * 10 + 15;
     }
 
-    // Textbox background
-    draw_rectangle(100, 140, 300, 20, 0x999999); // gray box
+    // --- Textbox layout ---
+    int box_width = 400;
+    int box_height = 30;
+    int box_x = (cur_mode_info.XResolution - box_width) / 2;
+    int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
-    // Show currently typed word
-    draw_text(cur_typed_word, 105, 145, 0xFFFFFF); // inside box
+    // Label
+    draw_text("Type here:", box_x - 110, box_y + 9, 0xCCCCCC); // light gray label
+
+    // Textbox outline
+    draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0xDDDDDD);
+
+    // Textbox background
+    draw_rectangle(box_x, box_y, box_width, box_height, 0x555555);
+
+    // User text
+    draw_text(cur_typed_word, box_x + 8, box_y + 8, 0xFFFFFF);
+
 
     return 0;
 }
@@ -235,7 +257,7 @@ int (main_interrupt_handler)(){
     uint8_t irq_keyboard; //add other iqrs as needed
     message msg;
 
-    //tem de ser mudado
+    //tem de ser mudado ----- IMPORTANT
     int total_words = 5;
     int cur_word_count = 0;
     int correct_words = 0;
