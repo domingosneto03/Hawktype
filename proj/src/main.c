@@ -11,7 +11,7 @@
 #include "i8254.h"
 
 
-
+extern vbe_mode_info_t cur_mode_info;
 extern uint8_t cur_scancode;
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
@@ -199,6 +199,9 @@ int draw_initial_screen() {
     if (set_frame_buffer(0x114) != 0) return 1;
     if (set_graphic_mode(0x114) != 0) return 1;
 
+    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
+
+
     // Title
     draw_text("HawkType", 10, 10, 0xFFFFFF);
 
@@ -311,6 +314,7 @@ int (main_interrupt_handler)(){
     printf("correct words: %d\n", correct_words);
 
     vg_exit();
+    printf("\033[2J\033[H");
     if (keyboard_unsubscribe_int()!=0) return 1;
     return 0;
 }

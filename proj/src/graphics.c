@@ -46,13 +46,21 @@ int (set_frame_buffer)(uint16_t mode){
     return 0;
 }
 
-int (normalization_color)(uint32_t color, uint32_t *new_color){
-    if (cur_mode_info.BitsPerPixel == 32){
+int normalization_color(uint32_t color, uint32_t *new_color) {
+    if (cur_mode_info.MemoryModel == DIRECT_COLOR) {
+        uint32_t r = (color >> 16) & 0xFF;
+        uint32_t g = (color >> 8)  & 0xFF;
+        uint32_t b =  color        & 0xFF;
+
+        r = (r >> (8 - cur_mode_info.RedMaskSize))   << cur_mode_info.RedFieldPosition;
+        g = (g >> (8 - cur_mode_info.GreenMaskSize)) << cur_mode_info.GreenFieldPosition;
+        b = (b >> (8 - cur_mode_info.BlueMaskSize))  << cur_mode_info.BlueFieldPosition;
+
+        *new_color = r | g | b;
+    } else {
         *new_color = color;
     }
-    else{
-        *new_color = color & (BIT(cur_mode_info.BitsPerPixel)-1);
-    }
+
     return 0;
 }
 
@@ -70,7 +78,10 @@ int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
     unsigned int pixel_index = (cur_mode_info.XResolution * y + x)* bpp;
     if (pixel_index >= cur_mode_info.XResolution * cur_mode_info.YResolution * bpp) return 1;
 
-    if (memcpy(&frame_buf[pixel_index], &color, bpp)== NULL){
+    uint32_t norm_color;
+    normalization_color(color, &norm_color);
+
+    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp) == NULL) {
         return 1;
     }
     return 0;
