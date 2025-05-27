@@ -10,12 +10,14 @@
 #include "timer.c"
 #include "i8254.h"
 #include "words_list.h"
+#include "mouse.c"
 
 
 
 extern vbe_mode_info_t cur_mode_info;
 extern uint8_t cur_scancode;
 extern int timer_counter; 
+extern struct packet mouse_packet;
 
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
@@ -291,6 +293,7 @@ int (main_interrupt_handler)(){
     int ipc_status;
     uint8_t irq_keyboard;
     uint8_t irq_timer = 0; //add other iqrs as needed
+    uint8_t irq_mouse; //mouse irq
     message msg;
 
     //tem de ser mudado
@@ -309,7 +312,8 @@ int (main_interrupt_handler)(){
 
     if (keyboard_subscribe_int(&irq_keyboard)!=0) return 1;
     if (timer_subscribe_int(&irq_timer)!=0) return 1;
-   // if (timer_set_frequency(0,60)!=0) return 1;
+    if(mouse_subscribe_int(&irq_mouse)!=0) return 1;
+    // if (timer_set_frequency(0,60)!=0) return 1;
 
     draw_initial_screen();
 
@@ -389,6 +393,20 @@ int (main_interrupt_handler)(){
                         }
                     }
                 }
+                
+                if (msg.m_notify.interrupts & irq_mouse) { /* subscribed interrupt */
+                    mouse_ih();
+                    mouse_byte_syncing();
+                    if (byte_index==3){
+                      mouse_bytes_to_packet(); 
+                      mouse_print_packet(&mouse_packet);
+                      byte_index = 0;
+                      printf("Mouse packet: lb: %d, mb: %d, rb: %d, x: %d, y: %d\n", 
+                        mouse_packet.lb, mouse_packet.mb, mouse_packet.rb, 
+                        mouse_packet.delta_x, mouse_packet.delta_y);
+                    }
+                  }
+                          
                 break;
             default:
                 break; /* no other notifications expected: do nothing */	
@@ -408,6 +426,7 @@ int (main_interrupt_handler)(){
     //aqui
     if (timer_unsubscribe_int()!=0) return 1;
     if (keyboard_unsubscribe_int()!=0) return 1;
+    if (mouse_unsubscribe_int()!=0) return 1;
     return 0;
 }
 
