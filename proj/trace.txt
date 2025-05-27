@@ -73,21 +73,7 @@
     @utils.c:23, util_sys_inb
       sys_inb(port, &byte)
     > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x9c = 0b10011100])
-  @main.c:282, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:291, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x38 = 0b00111000])
+    < sys_inb(0x60, addr: 0xeffff62c [0x01 = 0b00000001])
   @graphics.c:25, set_frame_buffer
     vbe_get_mode_info(mode, &cur_mode_info)
   > vbe_get_mode_info(0x105, addr: 0x824c404)
@@ -156,63 +142,21 @@
     @utils.c:23, util_sys_inb
       sys_inb(port, &byte)
     > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb8 = 0b10111000])
-  @main.c:282, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:291, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
-  @main.c:282, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:291, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb7 = 0b10110111])
-  @main.c:282, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:291, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
-  @main.c:282, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:291, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xaa = 0b10101010])
-  @main.c:282, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+    < sys_inb(0x60, addr: 0xeffff62c [0x81 = 0b10000001])
+  @main.c:343, main_interrupt_handler
+    printf("wrong words: %d\n", wrong_words)
+    "wrong words: 0"
+  @main.c:344, main_interrupt_handler
+    printf("correct words: %d\n", correct_words)
+    "correct words: 0"
+  @main.c:346, main_interrupt_handler
+    vg_exit()
+  < vg_exit() -> (ret: 0)
+  @main.c:347, main_interrupt_handler
+    printf("\033[2J\033[H")
+    "[2J[H"
+  @keyboard.c:15, keyboard_unsubscribe_int
+    sys_irqrmpolicy(&hook_id_keyboard)
+  > sys_irqrmpolicy(addr: 0x822e9c4 [10])
+  < sys_irqrmpolicy(addr: 0x822e9c4 [10]) -> (ret: 0)
+< proj_main_loop(0, [NULL]) -> (ret: 0)
