@@ -19,7 +19,13 @@ extern int timer_counter;
 
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
-
+enum gamestate{
+    WAITING,    //waiting to start (clickar tecla)
+    STARTED,    //timer a contar 
+    STATS,      //pós game a mostrar stats, à espera que se saia/comece novo jogo
+    RESETING,   //espera pelo o reset do jogo
+    EXIT
+};
 
 enum wordstate{
     NOTCHECKED,
@@ -293,19 +299,20 @@ int (main_interrupt_handler)(){
     uint8_t irq_timer = 0; //add other iqrs as needed
     message msg;
 
-    //tem de ser mudado
-    int total_words = MAX_GAME_WORDS;
+    //variavias para estatisticas
     int cur_word_count = 0;
     int correct_words = 0;
     int wrong_words = 0;
-    int game_set = 0;
-    int game_started = 0;
+    int final_time = 0;
+
     int game_time = 15;
+    int last_game_time = game_time;
+    //int total_words = MAX_GAME_WORDS;
+    enum gamestate game_state = WAITING;
 
     //esta parte, creio que terá de ser feita dentro de um main loop
     //(diferente do loop  while(cur_word_count < total_words) )
     word_scrambler();
-    game_set = 1;
 
     if (keyboard_subscribe_int(&irq_keyboard)!=0) return 1;
     if (timer_subscribe_int(&irq_timer)!=0) return 1;
@@ -320,7 +327,8 @@ int (main_interrupt_handler)(){
     }
     printf("\n");
 
-    while(cur_word_count < total_words && game_time > 0 && cur_scancode != BREAK_ESQ) {
+    while(game_state != EXIT) {
+        //cur_word_count < total_words && game_time > 0 && cur_scancode != BREAK_ESQ
 
         int r;
         if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
@@ -332,7 +340,7 @@ int (main_interrupt_handler)(){
             switch (_ENDPOINT_P(msg.m_source)) {
                 case HARDWARE: /* hardware interrupt notification */				
                     
-                if(msg.m_notify.interrupts & irq_timer & game_started){
+                if(msg.m_notify.interrupts & irq_timer & (game_state == STARTED)){
                         timer_int_handler(); 
                     if (timer_counter%60==0){
                         game_time--;
@@ -348,8 +356,8 @@ int (main_interrupt_handler)(){
                 
                 if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
                     kbc_ih();
-                    game_started = 1;
-                    if(game_set){
+                    game_state = STARTED;
+                    if(game_state!=STATS){
                         uint8_t make;
                         //int num_bytes; 
                         int scan_handler;
@@ -397,9 +405,47 @@ int (main_interrupt_handler)(){
             /* received a standard message, not a notification */
             /* no standard messages expected: do nothing */
         }
+
+        if(game_state==STATS){
+            //float cor_words = correct_words;
+            int percent = (100 * correct_words) / cur_word_count;
+            int decimal = (1000 * correct_words) / cur_word_count % 10;
+            printf("wrong words: %d\n", wrong_words);
+            printf("correct words: %d\n", correct_words);
+            printf("wpm: %d\n", (cur_word_count*60/final_time));
+            printf("accuracy: %d.%d%%\n", percent, decimal);
+            wrong_words = 0;    
+            correct_words = 0;
+            cur_word_count = 0;
+            final_time = 0; //maybe desnesseário
+            word_scrambler();
+            game_state = RESETING;
+
+            //este loop será substituido por representar as palabras no ecra mas por enquanto
+            for(int x = 0; x<MAX_GAME_WORDS; x++){
+                printf(" %s", word_list[x].word);
+            }
+            printf("\n");
+            
+        }
+
+        if(game_state==RESETING){
+            if(cur_scancode == 0x39){     //espaço tá a dar reset ao jogo
+                game_state = WAITING;
+                game_time = last_game_time;       
+            }
+        }
+
+
+        if((game_time == 0 & game_state == STARTED) || (cur_word_count==MAX_GAME_WORDS) ){
+            game_state = STATS;
+            final_time = game_time;
+        }
+
+        if(cur_scancode == BREAK_ESQ) game_state = EXIT; //isto será retirado (ou nao)
+
     }
-    printf("wrong words: %d\n", wrong_words);
-    printf("correct words: %d\n", correct_words);
+    
 
     vg_exit();
     printf("\033[2J\033[H");
