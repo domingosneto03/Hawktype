@@ -1,6 +1,6 @@
 #include "graphics.h"
 #include "font.h"
-#include "title_xpm.h"
+#include "include_xpm.h"
 
 vbe_mode_info_t cur_mode_info;
 uint8_t* frame_buf;
@@ -47,33 +47,46 @@ int (set_frame_buffer)(uint16_t mode){
     return 0;
 }
 
-int (normalization_color)(uint32_t color, uint32_t *new_color){
-    if (cur_mode_info.BitsPerPixel == 32){
+int normalization_color(uint32_t color, uint32_t *new_color) {
+    if (cur_mode_info.MemoryModel == DIRECT_COLOR) {
+        uint32_t r = (color >> 16) & 0xFF;
+        uint32_t g = (color >> 8)  & 0xFF;
+        uint32_t b =  color        & 0xFF;
+
+        r = (r >> (8 - cur_mode_info.RedMaskSize))   << cur_mode_info.RedFieldPosition;
+        g = (g >> (8 - cur_mode_info.GreenMaskSize)) << cur_mode_info.GreenFieldPosition;
+        b = (b >> (8 - cur_mode_info.BlueMaskSize))  << cur_mode_info.BlueFieldPosition;
+
+        *new_color = r | g | b;
+    } else {
         *new_color = color;
     }
-    else{
-        *new_color = color & (BIT(cur_mode_info.BitsPerPixel)-1);
-    }
+
     return 0;
 }
 
 int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
+
+    if (frame_buf == NULL) return 1;
+
     if (x > cur_mode_info.XResolution || y > cur_mode_info.YResolution){
+        //we don't check if is smaller than 0 'cause is an unsigned number
         return 1;
     }
 
     unsigned int bpp = (cur_mode_info.BitsPerPixel + 7) / 8;
+
     unsigned int pixel_index = (cur_mode_info.XResolution * y + x)* bpp;
-    
+    if (pixel_index >= cur_mode_info.XResolution * cur_mode_info.YResolution * bpp) return 1;
+
     uint32_t norm_color;
     normalization_color(color, &norm_color);
 
-    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp)== NULL){
+    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp) == NULL) {
         return 1;
     }
     return 0;
 }
-
 
 
 int (draw_horizontal_line)(uint16_t x, uint16_t y,uint16_t width,uint32_t color){
@@ -127,26 +140,24 @@ int (direct_mode)(int j, int i, uint32_t first, uint8_t step,uint32_t *color){
     return 0;
 }
 
-int (xpm_image_to_screen)(xpm_map_t xmp, uint16_t x, uint16_t y){
-
-    printf(" -> entered xpm_image_to_screen on H\n");
+int xpm_image_to_screen(xpm_map_t xmp, uint16_t x, uint16_t y) {
     xpm_image_t image;
-    uint8_t *colors = xpm_load(xmp, XPM_INDEXED, &image);
-    if (!colors) {
+    uint8_t *raw_data = xpm_load(xmp, XPM_8_8_8_8, &image);
+    if (!raw_data) {
         printf(" -> xpm_load failed\n");
         return 1;
     }
-    for (int i = 0; i < image.height; i++){
-        for (int j = 0; j < image.width; j++){
-            if(draw_pixel(x + j, y + i, *colors)!=0){
-                return 1;
-            }
-            colors++;
+
+    uint32_t *pixel_data = (uint32_t *)raw_data;
+    for (int i = 0; i < image.height; i++) {
+        for (int j = 0; j < image.width; j++) {
+            uint32_t color = pixel_data[i * image.width + j];
+            draw_pixel(x + j, y + i, color);
         }
     }
-    printf(" -> xpm reaches here\n");
     return 0;
 }
+
 
 int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
     uint8_t *glyph = font_bitmaps[(uint8_t)c];
@@ -161,8 +172,7 @@ int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
 int draw_xpm_title_letter(char c, uint16_t x, uint16_t y) {
      printf(" -> drawing %c\n", c);
   switch (c) {
-    case 'H': return xpm_image_to_screen(title_H, x, y);
-    /*
+    case 'H': return xpm_image_to_screen((xpm_map_t)title_H, x, y);
     case 'A': return xpm_image_to_screen((xpm_map_t)title_A, x, y);
     case 'W': return xpm_image_to_screen((xpm_map_t)title_W, x, y);
     case 'K': return xpm_image_to_screen((xpm_map_t)title_K, x, y);
@@ -170,7 +180,6 @@ int draw_xpm_title_letter(char c, uint16_t x, uint16_t y) {
     case 'Y': return xpm_image_to_screen((xpm_map_t)title_Y, x, y);
     case 'P': return xpm_image_to_screen((xpm_map_t)title_P, x, y);
     case 'E': return xpm_image_to_screen((xpm_map_t)title_E, x, y);
-    */
     default: return 1; // unknown char
   }
 }
@@ -189,5 +198,3 @@ int draw_xpm_title(const char* str, uint16_t x, uint16_t y) {
     }
     return 0;
 }
-
-
