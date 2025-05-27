@@ -196,10 +196,10 @@ int (word_checker)(int n){
 }
 
 int draw_initial_screen() {
-    if (set_frame_buffer(0x114) != 0) return 1;
-    if (set_graphic_mode(0x114) != 0) return 1;
+    if (set_frame_buffer(VBE_768p_INDEXED) != 0) return 1;
+    if (set_graphic_mode(VBE_768p_INDEXED) != 0) return 1;
 
-    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
+    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x11);
 
     printf("the code reaches here 1\n");
 
@@ -221,10 +221,10 @@ int draw_initial_screen() {
 
     for (int i = 0; i < 5; i++) {
         // Phrase word color
-        uint32_t color = 0xE0E0E0; // new default
+        uint32_t color = 0x37; // new default
         switch (word_list[i].state) {
-            case CORRECT:  color = 0x00FF00; break;
-            case WRONG:    color = 0xFF0000; break;
+            case CORRECT:  color = 0x2A; break;
+            case WRONG:    color = 0x21; break;
             case NOTCHECKED: default: break;
         }
 
@@ -241,16 +241,18 @@ int draw_initial_screen() {
     printf("the code reaches here 3\n");
 
     // Label
-    draw_text("Type here:", box_x - 110, box_y + 9, 0xCCCCCC); // light gray label
+    draw_text("Type here:", box_x - 110, box_y + 9, 0x37); // light gray label
+    printf("the code reaches here 4\n");
 
     // Textbox outline
-    draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0xDDDDDD);
-
+    draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0x2A);
+printf("the code reaches here 5\n");
     // Textbox background
-    draw_rectangle(box_x, box_y, box_width, box_height, 0x555555);
-
+    draw_rectangle(box_x, box_y, box_width, box_height, 0x37);
+printf("the code reaches here 6\n");
     // User text
-    draw_text(cur_typed_word, box_x + 8, box_y + 8, 0xFFFFFF);
+    draw_text(cur_typed_word, box_x + 8, box_y + 8, 0x2A);
+    printf("the code reaches here 7\n");
 
 
     return 0;

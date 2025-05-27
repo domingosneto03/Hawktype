@@ -47,45 +47,33 @@ int (set_frame_buffer)(uint16_t mode){
     return 0;
 }
 
-int normalization_color(uint32_t color, uint32_t *new_color) {
-    if (cur_mode_info.MemoryModel == DIRECT_COLOR) {
-        uint32_t r = (color >> 16) & 0xFF;
-        uint32_t g = (color >> 8)  & 0xFF;
-        uint32_t b =  color        & 0xFF;
-
-        r = (r >> (8 - cur_mode_info.RedMaskSize))   << cur_mode_info.RedFieldPosition;
-        g = (g >> (8 - cur_mode_info.GreenMaskSize)) << cur_mode_info.GreenFieldPosition;
-        b = (b >> (8 - cur_mode_info.BlueMaskSize))  << cur_mode_info.BlueFieldPosition;
-
-        *new_color = r | g | b;
-    } else {
+int (normalization_color)(uint32_t color, uint32_t *new_color){
+    if (cur_mode_info.BitsPerPixel == 32){
         *new_color = color;
     }
-
+    else{
+        *new_color = color & (BIT(cur_mode_info.BitsPerPixel)-1);
+    }
     return 0;
 }
 
 int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
-
-    if (frame_buf == NULL) return 1;
     if (x > cur_mode_info.XResolution || y > cur_mode_info.YResolution){
-        //we don't check if is smaller than 0 'cause is an unsigned number
         return 1;
     }
 
     unsigned int bpp = (cur_mode_info.BitsPerPixel + 7) / 8;
-
     unsigned int pixel_index = (cur_mode_info.XResolution * y + x)* bpp;
-    if (pixel_index >= cur_mode_info.XResolution * cur_mode_info.YResolution * bpp) return 1;
-
+    
     uint32_t norm_color;
     normalization_color(color, &norm_color);
 
-    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp) == NULL) {
+    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp)== NULL){
         return 1;
     }
     return 0;
 }
+
 
 
 int (draw_horizontal_line)(uint16_t x, uint16_t y,uint16_t width,uint32_t color){
@@ -140,26 +128,25 @@ int (direct_mode)(int j, int i, uint32_t first, uint8_t step,uint32_t *color){
 }
 
 int (xpm_image_to_screen)(xpm_map_t xmp, uint16_t x, uint16_t y){
-    printf(" -> entered xpm_image_to_screen\n");
 
+    printf(" -> entered xpm_image_to_screen on H\n");
     xpm_image_t image;
     uint8_t *colors = xpm_load(xmp, XPM_INDEXED, &image);
     if (!colors) {
         printf(" -> xpm_load failed\n");
         return 1;
     }
-
-    for (int i = 0; i < image.height; i++) {
-        for (int j = 0; j < image.width; j++) {
-            uint32_t color = *((uint32_t*)colors);
-            draw_pixel(x + j, y + i, color);
-            colors += 4;
+    for (int i = 0; i < image.height; i++){
+        for (int j = 0; j < image.width; j++){
+            if(draw_pixel(x + j, y + i, *colors)!=0){
+                return 1;
+            }
+            colors++;
         }
     }
-
+    printf(" -> xpm reaches here\n");
     return 0;
 }
-
 
 int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
     uint8_t *glyph = font_bitmaps[(uint8_t)c];

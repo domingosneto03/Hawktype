@@ -2,16 +2,23 @@ the code reaches here 1
 drawing letter: H
  -> drawing H
  -> calling xpm_image_to_screen on H
- -> entered xpm_image_to_screen
+ -> entered xpm_image_to_screen on H
+ -> xpm reaches here
 the code reaches here 2
 the code reaches here 3
+the code reaches here 4
+the code reaches here 5
+the code reaches here 6
+the code reaches here 7
 the code reaches here 1
 drawing letter: H
  -> drawing H
  -> calling xpm_image_to_screen on H
- -> entered xpm_image_to_screen
+ -> entered xpm_image_to_screen on H
+ -> xpm reaches here
 the code reaches here 2
 the code reaches here 3
-wrong words: 0
-correct words: 0
-[2J[H
+the code reaches here 4
+the code reaches here 5
+the code reaches here 6
+the code reaches here 7

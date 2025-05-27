@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stddef.h>
-#include "xpm.h"
+#include <lcom/lcf.h>
 
 static xpm_row_t const title_H[] = {
   "32 13 4",
