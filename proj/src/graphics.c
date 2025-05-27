@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "font.h"
+#include "title_xpm.h"
 
 vbe_mode_info_t cur_mode_info;
 uint8_t* frame_buf;
@@ -67,7 +68,6 @@ int normalization_color(uint32_t color, uint32_t *new_color) {
 int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
 
     if (frame_buf == NULL) return 1;
-
     if (x > cur_mode_info.XResolution || y > cur_mode_info.YResolution){
         //we don't check if is smaller than 0 'cause is an unsigned number
         return 1;
@@ -140,21 +140,26 @@ int (direct_mode)(int j, int i, uint32_t first, uint8_t step,uint32_t *color){
 }
 
 int (xpm_image_to_screen)(xpm_map_t xmp, uint16_t x, uint16_t y){
+    printf(" -> entered xpm_image_to_screen\n");
 
     xpm_image_t image;
-
     uint8_t *colors = xpm_load(xmp, XPM_INDEXED, &image);
-
-    for (int i = 0; i < image.height; i++){
-        for (int j = 0; j < image.width; j++){
-            if(draw_pixel(x + j, y + i, *colors)!=0){
-                return 1;
-            }
-            colors++;
-        } 
+    if (!colors) {
+        printf(" -> xpm_load failed\n");
+        return 1;
     }
+
+    for (int i = 0; i < image.height; i++) {
+        for (int j = 0; j < image.width; j++) {
+            uint32_t color = *((uint32_t*)colors);
+            draw_pixel(x + j, y + i, color);
+            colors += 4;
+        }
+    }
+
     return 0;
 }
+
 
 int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
     uint8_t *glyph = font_bitmaps[(uint8_t)c];
@@ -165,3 +170,37 @@ int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
                     return 1;
     return 0;
 }
+
+int draw_xpm_title_letter(char c, uint16_t x, uint16_t y) {
+     printf(" -> drawing %c\n", c);
+  switch (c) {
+    case 'H': printf(" -> calling xpm_image_to_screen on H\n"); return xpm_image_to_screen(title_H, x, y);
+    /*
+    case 'A': return xpm_image_to_screen((xpm_map_t)title_A, x, y);
+    case 'W': return xpm_image_to_screen((xpm_map_t)title_W, x, y);
+    case 'K': return xpm_image_to_screen((xpm_map_t)title_K, x, y);
+    case 'T': return xpm_image_to_screen((xpm_map_t)title_T, x, y);
+    case 'Y': return xpm_image_to_screen((xpm_map_t)title_Y, x, y);
+    case 'P': return xpm_image_to_screen((xpm_map_t)title_P, x, y);
+    case 'E': return xpm_image_to_screen((xpm_map_t)title_E, x, y);
+    */
+    default: return 1; // unknown char
+  }
+}
+
+int draw_xpm_title(const char* str, uint16_t x, uint16_t y) {
+    int spacing = 36;
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        printf("drawing letter: %c\n", str[i]);
+        if (str[i] != ' ') {
+            int result = draw_xpm_title_letter(str[i], x + i * spacing, y);
+            if (result != 0) {
+                printf("Failed to draw letter: %c\n", str[i]);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+

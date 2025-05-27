@@ -201,9 +201,13 @@ int draw_initial_screen() {
 
     draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
 
+    printf("the code reaches here 1\n");
 
     // Title
-    draw_text("HawkType", 10, 10, 0xF5F5F5);
+    //draw_xpm_title("HAWKTYPE", 10, 10);
+    draw_xpm_title("H", 10, 10);
+
+    printf("the code reaches here 2\n");
 
    // Determine total width of phrase
     int total_len = 0;
@@ -233,6 +237,8 @@ int draw_initial_screen() {
     int box_height = 30;
     int box_x = (cur_mode_info.XResolution - box_width) / 2;
     int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
+
+    printf("the code reaches here 3\n");
 
     // Label
     draw_text("Type here:", box_x - 110, box_y + 9, 0xCCCCCC); // light gray label

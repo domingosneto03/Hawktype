@@ -3,28 +3,53 @@
 > proj_main_loop(0, [NULL])
   @keyboard.c:10, keyboard_subscribe_int
     sys_irqsetpolicy(IRQ_KEYBOARD, IRQ_REENABLE|IRQ_EXCLUSIVE, &hook_id_keyboard)
-  > sys_irqsetpolicy(1, 3, addr: 0x822e2e8 [1])
-  < sys_irqsetpolicy(1, 3, addr: 0x822e2e8 [10]) -> (ret: 0)
-  @graphics.c:24, set_frame_buffer
+  > sys_irqsetpolicy(1, 3, addr: 0x822e878 [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x822e878 [10]) -> (ret: 0)
+  @graphics.c:25, set_frame_buffer
     vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
+  > vbe_get_mode_info(0x114, addr: 0x824c2b4)
+  < vbe_get_mode_info(0x114, addr: 0x824c2b4 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
+  @graphics.c:37, set_frame_buffer
     sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
   > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
   < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
+  @graphics.c:41, set_frame_buffer
     vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
   < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef910000)
-  @graphics.c:14, set_graphic_mode
+  @graphics.c:15, set_graphic_mode
     sys_int86(&reg86)
   > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
   < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
+  @main.c:204, draw_initial_screen
+    printf("the code reaches here 1\n")
+    "the code reaches here 1"
+  @graphics.c:194, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: H"
+  @graphics.c:175, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing H"
+  @graphics.c:177, draw_xpm_title_letter
+    printf(" -> calling xpm_image_to_screen on H\n")
+    " -> calling xpm_image_to_screen on H"
+  @graphics.c:143, xpm_image_to_screen
+    printf(" -> entered xpm_image_to_screen\n")
+    " -> entered xpm_image_to_screen"
+  @graphics.c:146, xpm_image_to_screen
+    xpm_load(xmp, XPM_INDEXED, &image)
+  > xpm_load(addr: 0x81b83e8, XPM_INDEXED, addr: 0xeffff680)
+  < xpm_load(addr: 0x81b83e8, XPM_INDEXED, addr: 0xeffff680 [32x13 : 416 bytes]) -> (ret: 0x8253000)
+  @main.c:210, draw_initial_screen
+    printf("the code reaches here 2\n")
+    "the code reaches here 2"
+  @main.c:241, draw_initial_screen
+    printf("the code reaches here 3\n")
+    "the code reaches here 3"
+  @main.c:280, main_interrupt_handler
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
+  @main.c:289, main_interrupt_handler
     kbc_ih()
     @utils.c:23, util_sys_inb
       sys_inb(port, &byte)
@@ -33,27 +58,66 @@
     @utils.c:23, util_sys_inb
       sys_inb(port, &byte)
     > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x23 = 0b00100011])
-  @graphics.c:24, set_frame_buffer
+    < sys_inb(0x60, addr: 0xeffff62c [0x9c = 0b10011100])
+  @main.c:280, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:289, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0x01 = 0b00000001])
+  @graphics.c:25, set_frame_buffer
     vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
+  > vbe_get_mode_info(0x114, addr: 0x824c2b4)
+  < vbe_get_mode_info(0x114, addr: 0x824c2b4 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
+  @graphics.c:37, set_frame_buffer
     sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
   > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
   < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
+  @graphics.c:41, set_frame_buffer
     vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
   < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef824000)
-  @graphics.c:14, set_graphic_mode
+  @graphics.c:15, set_graphic_mode
     sys_int86(&reg86)
   > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
   < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
+  @main.c:204, draw_initial_screen
+    printf("the code reaches here 1\n")
+    "the code reaches here 1"
+  @graphics.c:194, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: H"
+  @graphics.c:175, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing H"
+  @graphics.c:177, draw_xpm_title_letter
+    printf(" -> calling xpm_image_to_screen on H\n")
+    " -> calling xpm_image_to_screen on H"
+  @graphics.c:143, xpm_image_to_screen
+    printf(" -> entered xpm_image_to_screen\n")
+    " -> entered xpm_image_to_screen"
+  @graphics.c:146, xpm_image_to_screen
+    xpm_load(xmp, XPM_INDEXED, &image)
+  > xpm_load(addr: 0x81b83e8, XPM_INDEXED, addr: 0xeffff680)
+  < xpm_load(addr: 0x81b83e8, XPM_INDEXED, addr: 0xeffff680 [32x13 : 416 bytes]) -> (ret: 0x8253200)
+  @main.c:210, draw_initial_screen
+    printf("the code reaches here 2\n")
+    "the code reaches here 2"
+  @main.c:241, draw_initial_screen
+    printf("the code reaches here 3\n")
+    "the code reaches here 3"
+  @main.c:280, main_interrupt_handler
     driver_receive(ANY, &msg, &ipc_status)
   > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
   < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
+  @main.c:289, main_interrupt_handler
     kbc_ih()
     @utils.c:23, util_sys_inb
       sys_inb(port, &byte)
@@ -62,751 +126,21 @@
     @utils.c:23, util_sys_inb
       sys_inb(port, &byte)
     > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xa3 = 0b10100011])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x12 = 0b00010010])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef738000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x92 = 0b10010010])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x26 = 0b00100110])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef64c000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xa6 = 0b10100110])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x26 = 0b00100110])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef560000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xa6 = 0b10100110])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x18 = 0b00011000])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef474000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x98 = 0b10011000])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x39 = 0b00111001])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef388000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb9 = 0b10111001])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x23 = 0b00100011])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef29c000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xa3 = 0b10100011])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x18 = 0b00011000])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef1b0000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x98 = 0b10011000])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x11 = 0b00010001])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef0c4000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x91 = 0b10010001])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x39 = 0b00111001])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeefd8000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb9 = 0b10111001])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x23 = 0b00100011])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeeeec000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xa3 = 0b10100011])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x18 = 0b00011000])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeee00000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x98 = 0b10011000])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x11 = 0b00010001])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeed14000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x91 = 0b10010001])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x39 = 0b00111001])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeec28000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb9 = 0b10111001])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x1e = 0b00011110])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeeb3c000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x9e = 0b10011110])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x13 = 0b00010011])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xeea50000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x93 = 0b10010011])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0x39 = 0b00111001])
-  @graphics.c:24, set_frame_buffer
-    vbe_get_mode_info(mode, &cur_mode_info)
-  > vbe_get_mode_info(0x114, addr: 0x824bd24)
-  < vbe_get_mode_info(0x114, addr: 0x824bd24 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
-  @graphics.c:36, set_frame_buffer
-    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
-  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
-  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
-  @graphics.c:40, set_frame_buffer
-    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
-  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xee964000)
-  @graphics.c:14, set_graphic_mode
-    sys_int86(&reg86)
-  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
-  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb9 = 0b10111001])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xb7 = 0b10110111])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
-  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
-  @main.c:283, main_interrupt_handler
-    kbc_ih()
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x64, addr: 0xeffff62c)
-    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
-    @utils.c:23, util_sys_inb
-      sys_inb(port, &byte)
-    > sys_inb(0x60, addr: 0xeffff62c)
-    < sys_inb(0x60, addr: 0xeffff62c [0xaa = 0b10101010])
-  @main.c:274, main_interrupt_handler
-    driver_receive(ANY, &msg, &ipc_status)
-  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+    < sys_inb(0x60, addr: 0xeffff62c [0x81 = 0b10000001])
+  @main.c:341, main_interrupt_handler
+    printf("wrong words: %d\n", wrong_words)
+    "wrong words: 0"
+  @main.c:342, main_interrupt_handler
+    printf("correct words: %d\n", correct_words)
+    "correct words: 0"
+  @main.c:344, main_interrupt_handler
+    vg_exit()
+  < vg_exit() -> (ret: 0)
+  @main.c:345, main_interrupt_handler
+    printf("\033[2J\033[H")
+    "[2J[H"
+  @keyboard.c:15, keyboard_unsubscribe_int
+    sys_irqrmpolicy(&hook_id_keyboard)
+  > sys_irqrmpolicy(addr: 0x822e878 [10])
+  < sys_irqrmpolicy(addr: 0x822e878 [10]) -> (ret: 0)
+< proj_main_loop(0, [NULL]) -> (ret: 0)
