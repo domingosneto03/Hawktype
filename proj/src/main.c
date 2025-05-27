@@ -201,13 +201,9 @@ int draw_initial_screen() {
 
     draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x11);
 
-    printf("the code reaches here 1\n");
-
     // Title
     //draw_xpm_title("HAWKTYPE", 10, 10);
-    draw_xpm_title("H", 10, 10);
-
-    printf("the code reaches here 2\n");
+    //draw_xpm_title("H", 10, 10);
 
    // Determine total width of phrase
     int total_len = 0;
@@ -217,7 +213,7 @@ int draw_initial_screen() {
     int total_width = total_len * 10 + (5 - 1) * 15;
 
     int x = (cur_mode_info.XResolution - total_width) / 2;
-    int y = 200; // middle of the screen, adjust as needed
+    int y = 250; // middle of the screen, adjust as needed
 
     for (int i = 0; i < 5; i++) {
         // Phrase word color
@@ -236,24 +232,25 @@ int draw_initial_screen() {
     int box_width = 400;
     int box_height = 30;
     int box_x = (cur_mode_info.XResolution - box_width) / 2;
-    int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
-
-    printf("the code reaches here 3\n");
+    int box_y = cur_mode_info.YResolution - 200; // e.g. 500 for 600p
 
     // Label
-    draw_text("Type here:", box_x - 110, box_y + 9, 0x37); // light gray label
-    printf("the code reaches here 4\n");
+    if(draw_text("Type here:", box_x - 110, box_y + 9, 0x37) != 0) {
+        return 1;
+    } // light gray label
 
     // Textbox outline
-    draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0x2A);
-printf("the code reaches here 5\n");
+    if(draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0x2A) !=0) {
+        return 1;
+    }
     // Textbox background
-    draw_rectangle(box_x, box_y, box_width, box_height, 0x37);
-printf("the code reaches here 6\n");
+    if(draw_rectangle(box_x, box_y, box_width, box_height, 0x37) != 0) {
+        return 1;
+    }
     // User text
-    draw_text(cur_typed_word, box_x + 8, box_y + 8, 0x2A);
-    printf("the code reaches here 7\n");
-
+    if(draw_text(cur_typed_word, box_x + 8, box_y + 8, 0x2A)!=0) {
+        return 1;
+    }
 
     return 0;
 }
@@ -324,7 +321,7 @@ int (main_interrupt_handler)(){
                         }
 
                         // Update screen (textbox + phrase)
-                        draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
+                        //draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
                         draw_initial_screen();
                     }
 

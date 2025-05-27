@@ -161,7 +161,7 @@ int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
 int draw_xpm_title_letter(char c, uint16_t x, uint16_t y) {
      printf(" -> drawing %c\n", c);
   switch (c) {
-    case 'H': printf(" -> calling xpm_image_to_screen on H\n"); return xpm_image_to_screen(title_H, x, y);
+    case 'H': return xpm_image_to_screen(title_H, x, y);
     /*
     case 'A': return xpm_image_to_screen((xpm_map_t)title_A, x, y);
     case 'W': return xpm_image_to_screen((xpm_map_t)title_W, x, y);
