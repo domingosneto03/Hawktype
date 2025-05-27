@@ -1,0 +1,761 @@
+@lcflib.a:2019, lcf_start
+  proj_main_loop(argc, argv)
+> proj_main_loop(0, [NULL])
+  @keyboard.c:10, keyboard_subscribe_int
+    sys_irqsetpolicy(IRQ_KEYBOARD, IRQ_REENABLE|IRQ_EXCLUSIVE, &hook_id_keyboard)
+  > sys_irqsetpolicy(1, 3, addr: 0x82304ec [1])
+  < sys_irqsetpolicy(1, 3, addr: 0x82304ec [10]) -> (ret: 0)
+  @graphics.c:25, set_frame_buffer
+    vbe_get_mode_info(mode, &cur_mode_info)
+  > vbe_get_mode_info(0x114, addr: 0x824df34)
+  < vbe_get_mode_info(0x114, addr: 0x824df34 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
+  @graphics.c:37, set_frame_buffer
+    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
+  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
+  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
+  @graphics.c:41, set_frame_buffer
+    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
+  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef910000)
+  @graphics.c:15, set_graphic_mode
+    sys_int86(&reg86)
+  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: H"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing H"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f574, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f574, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8255000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: A"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing A"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f638, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f638, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8257000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: W"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing W"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f6fc, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f6fc, XPM_8_8_8_8, addr: 0xeffff658 [40x45 : 7200 bytes]) -> (ret: 0x8259000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: K"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing K"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f7c0, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f7c0, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x825b000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: T"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing T"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f884, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f884, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x825d000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: Y"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing Y"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f948, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f948, XPM_8_8_8_8, addr: 0xeffff658 [31x45 : 5580 bytes]) -> (ret: 0x825f000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: P"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing P"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fa0c, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822fa0c, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8261000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: E"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing E"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fad0, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822fad0, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8264000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8263000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8263800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8266000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8266800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8267000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8267800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8268000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8268800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8269000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fca8, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fca8, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8269800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826a000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826a800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826b000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fb94, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fb94, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826b800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826c000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826c800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x8230434, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x8230434, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826d000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826d800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82302c4, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82302c4, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826e000)
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0x9c = 0b10011100])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0x2a = 0b00101010])
+  @graphics.c:25, set_frame_buffer
+    vbe_get_mode_info(mode, &cur_mode_info)
+  > vbe_get_mode_info(0x114, addr: 0x824df34)
+  < vbe_get_mode_info(0x114, addr: 0x824df34 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
+  @graphics.c:37, set_frame_buffer
+    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
+  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
+  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
+  @graphics.c:41, set_frame_buffer
+    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
+  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef824000)
+  @graphics.c:15, set_graphic_mode
+    sys_int86(&reg86)
+  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: H"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing H"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f574, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f574, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x826f000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: A"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing A"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f638, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f638, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8271000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: W"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing W"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f6fc, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f6fc, XPM_8_8_8_8, addr: 0xeffff658 [40x45 : 7200 bytes]) -> (ret: 0x8273000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: K"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing K"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f7c0, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f7c0, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8275000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: T"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing T"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f884, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f884, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8277000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: Y"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing Y"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f948, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f948, XPM_8_8_8_8, addr: 0xeffff658 [31x45 : 5580 bytes]) -> (ret: 0x8279000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: P"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing P"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fa0c, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822fa0c, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x827b000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: E"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing E"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fad0, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822fad0, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x827d000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x826e800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x827f000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x827f800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8280000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8280800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8281000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8281800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8282000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8282800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fca8, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fca8, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8283000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8283800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8284000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8284800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fb94, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fb94, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8285000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8285800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8286000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x8230434, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x8230434, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8286800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8287000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82302c4, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82302c4, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8287800)
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0x37 = 0b00110111])
+  @graphics.c:25, set_frame_buffer
+    vbe_get_mode_info(mode, &cur_mode_info)
+  > vbe_get_mode_info(0x114, addr: 0x824df34)
+  < vbe_get_mode_info(0x114, addr: 0x824df34 [0xe0000000, 800x600, 5:6:5 (16) <937.5 KiB>]) -> (ret: 0)
+  @graphics.c:37, set_frame_buffer
+    sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)
+  > sys_privctl(SELF, SYS_PRIV_ADD_MEM, addr: 0xeffff6c8 [0xe0000000 - 0xe00ea600 <937.5 KiB>])
+  < sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr) -> (ret: 0)
+  @graphics.c:41, set_frame_buffer
+    vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size)
+  < vm_map_phys(SELF, addr: 0xe0000000, 937.5 KiB) -> (ret: 0xef738000)
+  @graphics.c:15, set_graphic_mode
+    sys_int86(&reg86)
+  > sys_int86(addr: 0xeffff6a0 [AX: 4f02, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000])
+  < sys_int86(addr: 0xeffff6a0 [AX: 004f, BX: 4114, CX: 0000, DX: 0000, ES: 0000, DI: 0000]) -> (ret: 0)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: H"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing H"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f574, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f574, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8288000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: A"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing A"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f638, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f638, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x828a000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: W"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing W"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f6fc, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f6fc, XPM_8_8_8_8, addr: 0xeffff658 [40x45 : 7200 bytes]) -> (ret: 0x828c000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: K"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing K"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f7c0, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f7c0, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x828e000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: T"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing T"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f884, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f884, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8290000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: Y"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing Y"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822f948, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822f948, XPM_8_8_8_8, addr: 0xeffff658 [31x45 : 5580 bytes]) -> (ret: 0x8292000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: P"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing P"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fa0c, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822fa0c, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8294000)
+  @graphics.c:196, draw_xpm_title
+    printf("drawing letter: %c\n", str[i])
+    "drawing letter: E"
+  @graphics.c:179, draw_xpm_title_letter
+    printf(" -> drawing %c\n", c)
+    " -> drawing E"
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fad0, XPM_8_8_8_8, addr: 0xeffff658)
+  < xpm_load(addr: 0x822fad0, XPM_8_8_8_8, addr: 0xeffff658 [30x45 : 5400 bytes]) -> (ret: 0x8296000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8298000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8298800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8299000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x8299800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829a000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829a800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829b000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829b800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822ff88, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829c000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fca8, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fca8, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829c800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fe18, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829d000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829d800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823037c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829e000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fb94, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fb94, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829e800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82301b0, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829f000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x822fd04, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x829f800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x8230434, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x8230434, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x82a0000)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x823009c, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x82a0800)
+  @graphics.c:145, xpm_image_to_screen
+    xpm_load(xmp, XPM_8_8_8_8, &image)
+  > xpm_load(addr: 0x82302c4, XPM_8_8_8_8, addr: 0xeffff680)
+  < xpm_load(addr: 0x82302c4, XPM_8_8_8_8, addr: 0xeffff680 [15x20 : 1200 bytes]) -> (ret: 0x82a1000)
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xb7 = 0b10110111])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xaa = 0b10101010])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xb7 = 0b10110111])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xaa = 0b10101010])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xb7 = 0b10110111])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xe0 = 0b11100000])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)
+  < driver_receive(<[HARDWARE: 0b0000000000000000000000000000000000000000000000000000000000000010]>)
+  @main.c:283, main_interrupt_handler
+    kbc_ih()
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x64, addr: 0xeffff62c)
+    < sys_inb(0x64, addr: 0xeffff62c [0x1d = 0b00011101])
+    @utils.c:23, util_sys_inb
+      sys_inb(port, &byte)
+    > sys_inb(0x60, addr: 0xeffff62c)
+    < sys_inb(0x60, addr: 0xeffff62c [0xaa = 0b10101010])
+  @main.c:274, main_interrupt_handler
+    driver_receive(ANY, &msg, &ipc_status)
+  > driver_receive(ANY, addr: 0xeffff740, addr: 0xeffff784)

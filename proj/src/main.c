@@ -224,7 +224,7 @@ int draw_initial_screen() {
             case NOTCHECKED: default: break;
         }
 
-        draw_text(word_list[i].word, x, y, color);
+        draw_xpm_sentence(word_list[i].word, x, y);
         x += strlen(word_list[i].word) * 10 + 15;
     }
 

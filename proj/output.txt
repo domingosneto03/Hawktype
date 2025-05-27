@@ -14,3 +14,35 @@ drawing letter: P
  -> drawing P
 drawing letter: E
  -> drawing E
+drawing letter: H
+ -> drawing H
+drawing letter: A
+ -> drawing A
+drawing letter: W
+ -> drawing W
+drawing letter: K
+ -> drawing K
+drawing letter: T
+ -> drawing T
+drawing letter: Y
+ -> drawing Y
+drawing letter: P
+ -> drawing P
+drawing letter: E
+ -> drawing E
+drawing letter: H
+ -> drawing H
+drawing letter: A
+ -> drawing A
+drawing letter: W
+ -> drawing W
+drawing letter: K
+ -> drawing K
+drawing letter: T
+ -> drawing T
+drawing letter: Y
+ -> drawing Y
+drawing letter: P
+ -> drawing P
+drawing letter: E
+ -> drawing E

@@ -198,3 +198,46 @@ int draw_xpm_title(const char* str, uint16_t x, uint16_t y) {
     }
     return 0;
 }
+
+int draw_xpm_sentence_letter(char c, uint16_t x, uint16_t y) {
+  switch (c) {
+    case 'a': return xpm_image_to_screen((xpm_map_t)font_a, x, y);
+    case 'b': return xpm_image_to_screen((xpm_map_t)font_b, x, y);
+    case 'c': return xpm_image_to_screen((xpm_map_t)font_c, x, y);
+    case 'd': return xpm_image_to_screen((xpm_map_t)font_d, x, y);
+    case 'e': return xpm_image_to_screen((xpm_map_t)font_e, x, y);
+    case 'f': return xpm_image_to_screen((xpm_map_t)font_f, x, y);
+    case 'g': return xpm_image_to_screen((xpm_map_t)font_g, x, y);
+    case 'h': return xpm_image_to_screen((xpm_map_t)font_h, x, y);
+    case 'i': return xpm_image_to_screen((xpm_map_t)font_i, x, y);
+    case 'j': return xpm_image_to_screen((xpm_map_t)font_j, x, y);
+    case 'k': return xpm_image_to_screen((xpm_map_t)font_k, x, y);
+    case 'l': return xpm_image_to_screen((xpm_map_t)font_l, x, y);
+    case 'm': return xpm_image_to_screen((xpm_map_t)font_m, x, y);
+    case 'n': return xpm_image_to_screen((xpm_map_t)font_n, x, y);
+    case 'o': return xpm_image_to_screen((xpm_map_t)font_o, x, y);
+    case 'p': return xpm_image_to_screen((xpm_map_t)font_p, x, y);
+    case 'q': return xpm_image_to_screen((xpm_map_t)font_q, x, y);
+    case 'r': return xpm_image_to_screen((xpm_map_t)font_r, x, y);
+    case 's': return xpm_image_to_screen((xpm_map_t)font_s, x, y);
+    case 't': return xpm_image_to_screen((xpm_map_t)font_t, x, y);
+    case 'u': return xpm_image_to_screen((xpm_map_t)font_u, x, y);
+    case 'v': return xpm_image_to_screen((xpm_map_t)font_v, x, y);
+    case 'w': return xpm_image_to_screen((xpm_map_t)font_w, x, y);
+    case 'x': return xpm_image_to_screen((xpm_map_t)font_x, x, y);
+    case 'y': return xpm_image_to_screen((xpm_map_t)font_y, x, y);
+    case 'z': return xpm_image_to_screen((xpm_map_t)font_z, x, y);
+    default: return 1;
+  }
+}
+
+int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
+  int spacing = 24;
+  for (size_t i = 0; str[i] != '\0'; i++) {
+    if (str[i] != ' ') {
+      draw_xpm_sentence_letter(str[i], x + i * spacing, y);
+    }
+  }
+  return 0;
+}
+
