@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "font.h"
 
 vbe_mode_info_t cur_mode_info;
 uint8_t* frame_buf;
@@ -38,23 +39,34 @@ int (set_frame_buffer)(uint16_t mode){
 
     frame_buf = vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size);
     if (frame_buf ==NULL){
+        printf("Framebuffer mapping failed\n");
         return 1;
     }
 
     return 0;
 }
 
-int (normalization_color)(uint32_t color, uint32_t *new_color){
-    if (cur_mode_info.BitsPerPixel == 32){
+int normalization_color(uint32_t color, uint32_t *new_color) {
+    if (cur_mode_info.MemoryModel == DIRECT_COLOR) {
+        uint32_t r = (color >> 16) & 0xFF;
+        uint32_t g = (color >> 8)  & 0xFF;
+        uint32_t b =  color        & 0xFF;
+
+        r = (r >> (8 - cur_mode_info.RedMaskSize))   << cur_mode_info.RedFieldPosition;
+        g = (g >> (8 - cur_mode_info.GreenMaskSize)) << cur_mode_info.GreenFieldPosition;
+        b = (b >> (8 - cur_mode_info.BlueMaskSize))  << cur_mode_info.BlueFieldPosition;
+
+        *new_color = r | g | b;
+    } else {
         *new_color = color;
     }
-    else{
-        *new_color = color & (BIT(cur_mode_info.BitsPerPixel)-1);
-    }
+
     return 0;
 }
 
 int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
+
+    if (frame_buf == NULL) return 1;
 
     if (x > cur_mode_info.XResolution || y > cur_mode_info.YResolution){
         //we don't check if is smaller than 0 'cause is an unsigned number
@@ -64,8 +76,12 @@ int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
     unsigned int bpp = (cur_mode_info.BitsPerPixel + 7) / 8;
 
     unsigned int pixel_index = (cur_mode_info.XResolution * y + x)* bpp;
+    if (pixel_index >= cur_mode_info.XResolution * cur_mode_info.YResolution * bpp) return 1;
 
-    if (memcpy(&frame_buf[pixel_index], &color, bpp)== NULL){
+    uint32_t norm_color;
+    normalization_color(color, &norm_color);
+
+    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp) == NULL) {
         return 1;
     }
     return 0;
@@ -137,5 +153,15 @@ int (xpm_image_to_screen)(xpm_map_t xmp, uint16_t x, uint16_t y){
             colors++;
         } 
     }
+    return 0;
+}
+
+int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
+    uint8_t *glyph = font_bitmaps[(uint8_t)c];
+    for (int row = 0; row < 16; row++)
+        for (int col = 0; col < 8; col++)
+            if (glyph[row] & (1 << (7 - col)))
+                if (draw_pixel(x + col, y + row, color))
+                    return 1;
     return 0;
 }

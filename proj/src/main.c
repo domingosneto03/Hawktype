@@ -6,15 +6,19 @@
 
 #include "i8042.h"
 #include "keyboard.h"
+#include "graphics.h"
 #include "timer.c"
 #include "i8254.h"
 #include "words_list.h"
 
 
+
+extern vbe_mode_info_t cur_mode_info;
 extern uint8_t cur_scancode;
 extern int timer_counter; 
 
 char cur_typed_word[MAX_WORD_SIZE] = "";
+
 
 
 enum wordstate{
@@ -29,6 +33,18 @@ struct words{
 };
 
 struct words word_list[MAX_GAME_WORDS];
+
+int draw_text(const char* str, uint16_t x, uint16_t y, uint32_t color) {
+    int spacing = 10;
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        char c = str[i];
+        if (c != ' ') {
+            draw_char(x + i * spacing, y, c, color);
+        }
+    }
+    return 0;
+}
+
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -209,6 +225,66 @@ void (word_scrambler)(){
     }
 }
 
+int draw_initial_screen() {
+    if (set_frame_buffer(VBE_768p_INDEXED) != 0) return 1;
+    if (set_graphic_mode(VBE_768p_INDEXED) != 0) return 1;
+
+    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x11);
+
+    // Title
+    //draw_xpm_title("HAWKTYPE", 10, 10);
+    //draw_xpm_title("H", 10, 10);
+
+   // Determine total width of phrase
+    int total_len = 0;
+    for (int i = 0; i < 5; i++) {
+        total_len += strlen(word_list[i].word);
+    }
+    int total_width = total_len * 10 + (5 - 1) * 15;
+
+    int x = (cur_mode_info.XResolution - total_width) / 2;
+    int y = 250; // middle of the screen, adjust as needed
+
+    for (int i = 0; i < 5; i++) {
+        // Phrase word color
+        uint32_t color = 0x37; // new default
+        switch (word_list[i].state) {
+            case CORRECT:  color = 0x2A; break;
+            case WRONG:    color = 0x21; break;
+            case NOTCHECKED: default: break;
+        }
+
+        draw_text(word_list[i].word, x, y, color);
+        x += strlen(word_list[i].word) * 10 + 15;
+    }
+
+    // --- Textbox layout ---
+    int box_width = 400;
+    int box_height = 30;
+    int box_x = (cur_mode_info.XResolution - box_width) / 2;
+    int box_y = cur_mode_info.YResolution - 200; // e.g. 500 for 600p
+
+    // Label
+    if(draw_text("Type here:", box_x - 110, box_y + 9, 0x37) != 0) {
+        return 1;
+    } // light gray label
+
+    // Textbox outline
+    if(draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0x2A) !=0) {
+        return 1;
+    }
+    // Textbox background
+    if(draw_rectangle(box_x, box_y, box_width, box_height, 0x37) != 0) {
+        return 1;
+    }
+    // User text
+    if(draw_text(cur_typed_word, box_x + 8, box_y + 8, 0x2A)!=0) {
+        return 1;
+    }
+
+    return 0;
+}
+
 
 int (main_interrupt_handler)(){
 
@@ -235,7 +311,7 @@ int (main_interrupt_handler)(){
     if (timer_subscribe_int(&irq_timer)!=0) return 1;
    // if (timer_set_frequency(0,60)!=0) return 1;
 
-
+    draw_initial_screen();
 
 
    //aqui
@@ -244,7 +320,7 @@ int (main_interrupt_handler)(){
     }
     printf("\n");
 
-    while(cur_word_count < total_words && game_time > 0) {
+    while(cur_word_count < total_words && game_time > 0 && cur_scancode != BREAK_ESQ) {
 
         int r;
         if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
@@ -254,69 +330,80 @@ int (main_interrupt_handler)(){
 
         if (is_ipc_notify(ipc_status)) { /* received notification */
             switch (_ENDPOINT_P(msg.m_source)) {
-                case HARDWARE: /* hardware interrupt notification */
+                case HARDWARE: /* hardware interrupt notification */				
                     
-                    if(msg.m_notify.interrupts & irq_timer & game_started){
-                          timer_int_handler(); 
-                        if (timer_counter%60==0){
-                            game_time--;
-                            printf("%d\n",game_time);
-                        }
+                if(msg.m_notify.interrupts & irq_timer & game_started){
+                        timer_int_handler(); 
+                    if (timer_counter%60==0){
+                        game_time--;
+                        printf("%d\n",game_time);
                     }
 
+                    // Update screen (textbox + phrase)
+                    //draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
+                    draw_initial_screen();
+                }
 
-                    if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
-                        kbc_ih();
-                        game_started = 1;
-                        if(game_set){
-                            uint8_t make;
-                            //int num_bytes; 
-                            int scan_handler;
-                            int wrong_word;
 
-                            if((cur_scancode & BREAK_CODE) == 0) make = 1;
-                            else make = 0;
+                
+                if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
+                    kbc_ih();
+                    game_started = 1;
+                    if(game_set){
+                        uint8_t make;
+                        //int num_bytes; 
+                        int scan_handler;
+                        int wrong_word;
 
-                            //desnecessário creio, mas quando copiei o loop do lab3 só comentei lol
-                            // if(cur_scancode == TWO_BYTE_CODE) num_bytes = 2;
-                            // else num_bytes = 1;
+                        if((cur_scancode & BREAK_CODE) == 0) make = 1;
+                        else make = 0;
 
-                            if(make){
-                                scan_handler = code_to_word();
-                                if(scan_handler == -1){
-                                    printf("Word size limit reached.");
-                                    scan_handler = 1;
+                        //desnecessário creio, mas quando copiei o loop do lab3 só comentei lol
+                        // if(cur_scancode == TWO_BYTE_CODE) num_bytes = 2;
+                        // else num_bytes = 1;
+
+                        if(make){
+                            scan_handler = code_to_word();
+
+                            if(scan_handler == -1){
+                                printf("Word size limit reached.");
+                                scan_handler = 1;
+                            }
+                            //caso seja um espaço
+                            if(scan_handler == 1){
+                                //checkar se a palavra tava certa
+                                wrong_word = word_checker(cur_word_count);
+                                if(wrong_word==0){
+                                    correct_words++;
                                 }
-                                //caso seja um espaço
-                                if(scan_handler == 1){
-                                    //checkar se a palavra tava certa
-                                    wrong_word = word_checker(cur_word_count);
-                                    if(wrong_word==0){
-                                        correct_words++;
-                                    }
-                                    else{
-                                        wrong_words++;
-                                    }
-                                    //debug
-                                    printf("Word %d: %s \n", cur_word_count, cur_typed_word );
-                                    //limpar palavra
-                                    memset(cur_typed_word,0,sizeof(cur_typed_word));
-                                    cur_word_count++;
+                                else{
+                                    wrong_words++;
                                 }
+
+                                //debug
+                                printf("Word %d: %s \n", cur_word_count, cur_typed_word );
+                                //limpar palavra
+                                memset(cur_typed_word,0,sizeof(cur_typed_word));
+                                cur_word_count++;
                             }
                         }
                     }
-                    break;
-                default:
-                    break; /* no other notifications expected: do nothing */	
                 }
-            } else { 
-                /* received a standard message, not a notification */
-                /* no standard messages expected: do nothing */
+                break;
+            default:
+                break; /* no other notifications expected: do nothing */	
             }
+        } else { 
+            /* received a standard message, not a notification */
+            /* no standard messages expected: do nothing */
         }
+    }
     printf("wrong words: %d\n", wrong_words);
     printf("correct words: %d\n", correct_words);
+
+    vg_exit();
+    printf("\033[2J\033[H");
+
     
     //aqui
     if (timer_unsubscribe_int()!=0) return 1;
