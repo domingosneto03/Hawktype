@@ -1,6 +1,7 @@
 #ifndef WORD_LIST_H
 #define WORD_LIST_H
 
+//Estes conjuntos de palavras foram gerados pelo o Deepsesk AI, tal como falado com o professor.
 const char *word_bank1[492] = {
     "the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
     "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",

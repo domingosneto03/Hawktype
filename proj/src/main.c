@@ -12,6 +12,8 @@
 
 
 extern uint8_t cur_scancode;
+extern int timer_counter; 
+
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
 
@@ -66,6 +68,11 @@ int (code_to_word)(){
     if (len < MAX_WORD_SIZE -1){
         switch (cur_scancode){
             //this is the case of spacebar
+            case 0x0E:
+                if (len!=0){
+                    cur_typed_word[len-1] = '\n';
+                }
+                return 0;
             case 0x39:
                 //não vamos aceitar o input de uma string vazia
                 if(len == 0){
@@ -177,7 +184,6 @@ int (word_checker)(int n){
     return 0;
 }
 
-//TODO: meter os strcpy safes como em cima
 void (word_scrambler)(){
     for(int i = 0; i < MAX_GAME_WORDS; i++){
 
@@ -207,7 +213,8 @@ void (word_scrambler)(){
 int (main_interrupt_handler)(){
 
     int ipc_status;
-    uint8_t irq_keyboard; //add other iqrs as needed
+    uint8_t irq_keyboard;
+    uint8_t irq_timer = 0; //add other iqrs as needed
     message msg;
 
     //tem de ser mudado
@@ -216,7 +223,8 @@ int (main_interrupt_handler)(){
     int correct_words = 0;
     int wrong_words = 0;
     int game_set = 0;
-
+    int game_started = 0;
+    int game_time = 15;
 
     //esta parte, creio que terá de ser feita dentro de um main loop
     //(diferente do loop  while(cur_word_count < total_words) )
@@ -224,14 +232,19 @@ int (main_interrupt_handler)(){
     game_set = 1;
 
     if (keyboard_subscribe_int(&irq_keyboard)!=0) return 1;
+    if (timer_subscribe_int(&irq_timer)!=0) return 1;
+   // if (timer_set_frequency(0,60)!=0) return 1;
 
 
+
+
+   //aqui
     for(int x = 0; x<MAX_GAME_WORDS; x++){
         printf(" %s", word_list[x].word);
     }
     printf("\n");
 
-    while(cur_word_count < total_words) {
+    while(cur_word_count < total_words && game_time > 0) {
 
         int r;
         if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
@@ -241,51 +254,58 @@ int (main_interrupt_handler)(){
 
         if (is_ipc_notify(ipc_status)) { /* received notification */
             switch (_ENDPOINT_P(msg.m_source)) {
-                case HARDWARE: /* hardware interrupt notification */				
-                if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
-                    kbc_ih();
+                case HARDWARE: /* hardware interrupt notification */
+                    
+                    if(msg.m_notify.interrupts & irq_timer & game_started){
+                          timer_int_handler(); 
+                        if (timer_counter%60==0){
+                            game_time--;
+                            printf("%d\n",game_time);
+                        }
+                    }
 
-                    if(game_set){
-                        uint8_t make;
-                        //int num_bytes; 
-                        int scan_handler;
-                        int wrong_word;
 
-                        if((cur_scancode & BREAK_CODE) == 0) make = 1;
-                        else make = 0;
+                    if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
+                        kbc_ih();
+                        game_started = 1;
+                        if(game_set){
+                            uint8_t make;
+                            //int num_bytes; 
+                            int scan_handler;
+                            int wrong_word;
 
-                        //desnecessário creio, mas quando copiei o loop do lab3 só comentei lol
-                        // if(cur_scancode == TWO_BYTE_CODE) num_bytes = 2;
-                        // else num_bytes = 1;
+                            if((cur_scancode & BREAK_CODE) == 0) make = 1;
+                            else make = 0;
 
-                        if(make){
-                            scan_handler = code_to_word();
-                            if(scan_handler == -1){
-                                printf("Word size limit reached.");
-                                scan_handler = 1;
-                            }
-                            //caso seja um espaço
-                            if(scan_handler == 1){
-                                //checkar se a palavra tava certa
-                                wrong_word = word_checker(cur_word_count);
-                                if(wrong_word==0){
-                                    correct_words++;
+                            //desnecessário creio, mas quando copiei o loop do lab3 só comentei lol
+                            // if(cur_scancode == TWO_BYTE_CODE) num_bytes = 2;
+                            // else num_bytes = 1;
+
+                            if(make){
+                                scan_handler = code_to_word();
+                                if(scan_handler == -1){
+                                    printf("Word size limit reached.");
+                                    scan_handler = 1;
                                 }
-                                else{
-                                    wrong_words++;
+                                //caso seja um espaço
+                                if(scan_handler == 1){
+                                    //checkar se a palavra tava certa
+                                    wrong_word = word_checker(cur_word_count);
+                                    if(wrong_word==0){
+                                        correct_words++;
+                                    }
+                                    else{
+                                        wrong_words++;
+                                    }
+                                    //debug
+                                    printf("Word %d: %s \n", cur_word_count, cur_typed_word );
+                                    //limpar palavra
+                                    memset(cur_typed_word,0,sizeof(cur_typed_word));
+                                    cur_word_count++;
                                 }
-                                //debug
-                                printf("Word %d: %s \n", cur_word_count, cur_typed_word );
-                                //limpar palavra
-                                memset(cur_typed_word,0,sizeof(cur_typed_word));
-                                cur_word_count++;
                             }
                         }
                     }
-                    
-                    
-
-                }
                     break;
                 default:
                     break; /* no other notifications expected: do nothing */	
@@ -297,7 +317,9 @@ int (main_interrupt_handler)(){
         }
     printf("wrong words: %d\n", wrong_words);
     printf("correct words: %d\n", correct_words);
-
+    
+    //aqui
+    if (timer_unsubscribe_int()!=0) return 1;
     if (keyboard_unsubscribe_int()!=0) return 1;
     return 0;
 }
