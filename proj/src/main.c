@@ -225,6 +225,7 @@ int draw_initial_screen() {
         }
 
         draw_xpm_sentence(word_list[i].word, x, y);
+        //draw_xpm_text(word_list[i].word, x, y);
         x += strlen(word_list[i].word) * 10 + 15;
     }
 

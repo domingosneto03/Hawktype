@@ -241,3 +241,78 @@ int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
   return 0;
 }
 
+/*
+int draw_xpm_text(const char* str, uint16_t x, uint16_t y) {
+    uint16_t offset = 0;
+    for (size_t i = 0; str[i]; i++) {
+        xpm_map_t **font_xpm = NULL;
+        switch (str[i]) {
+            
+            
+            case 'A': font_xpm = font_A; break;
+            case 'B': font_xpm = font_B; break;
+            case 'C': font_xpm = font_C; break;
+            case 'D': font_xpm = font_D; break;
+            case 'E': font_xpm = font_E; break;
+            case 'F': font_xpm = font_F; break;
+            case 'G': font_xpm = font_G; break;
+            case 'H': font_xpm = font_H; break;
+            case 'I': font_xpm = font_I; break;
+            case 'J': font_xpm = font_J; break;
+            case 'K': font_xpm = font_K; break;
+            case 'L': font_xpm = font_L; break;
+            case 'M': font_xpm = font_M; break;
+            case 'N': font_xpm = font_N; break;
+            case 'O': font_xpm = font_O; break;
+            case 'P': font_xpm = font_P; break;
+            case 'Q': font_xpm = font_Q; break;
+            case 'R': font_xpm = font_R; break;
+            case 'S': font_xpm = font_S; break;
+            case 'T': font_xpm = font_T; break;
+            case 'U': font_xpm = font_U; break;
+            case 'V': font_xpm = font_V; break;
+            case 'W': font_xpm = font_W; break;
+            case 'X': font_xpm = font_X; break;
+            case 'Y': font_xpm = font_Y; break;
+            case 'Z': font_xpm = font_Z; break;
+
+            case 'a': font_xpm = font_a; break;
+            case 'b': font_xpm = font_b; break;
+            case 'c': font_xpm = font_c; break;
+            case 'd': font_xpm = font_d; break;
+            case 'e': font_xpm = font_e; break;
+            case 'f': font_xpm = font_f; break;
+            case 'g': font_xpm = font_g; break;
+            case 'h': font_xpm = font_h; break;
+            case 'i': font_xpm = font_i; break;
+            case 'j': font_xpm = font_j; break;
+            case 'k': font_xpm = font_k; break;
+            case 'l': font_xpm = font_l; break;
+            case 'm': font_xpm = font_m; break;
+            case 'n': font_xpm = font_n; break;
+            case 'o': font_xpm = font_o; break;
+            case 'p': font_xpm = font_p; break;
+            case 'q': font_xpm = font_q; break;
+            case 'r': font_xpm = font_r; break;
+            case 's': font_xpm = font_s; break;
+            case 't': font_xpm = font_t; break;
+            case 'u': font_xpm = font_u; break;
+            case 'v': font_xpm = font_v; break;
+            case 'w': font_xpm = font_w; break;
+            case 'x': font_xpm = font_x; break;
+            case 'y': font_xpm = font_y; break;
+            case 'z': font_xpm = font_z; break;
+            
+            case ' ':
+                offset += 8;
+                continue;
+            default:
+                offset += 8;
+                continue;
+        }
+        xpm_image_to_screen(font_xpm, x + offset, y);
+        offset += 8;
+    }
+    return 0;
+}
+*/
