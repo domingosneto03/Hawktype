@@ -32,6 +32,10 @@ int (draw_xpm_title)(const char* str, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter)(char c, uint16_t x, uint16_t y);
 
 int (draw_xpm_sentence)(const char* str, uint16_t x, uint16_t y);
+int (draw_xpm_sentence_red)(const char* str, uint16_t x, uint16_t y);
+int (draw_xpm_sentence_green)(const char* str, uint16_t x, uint16_t y);
+int (draw_xpm_sentence_letterRed)(char c, uint16_t x, uint16_t y);
+int (draw_xpm_sentence_letterGreen)(char c, uint16_t x, uint16_t y);
 
 //int (draw_xpm_text)(const char* str, uint16_t x, uint16_t y);
 

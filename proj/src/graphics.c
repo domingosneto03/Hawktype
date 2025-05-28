@@ -201,7 +201,7 @@ int draw_xpm_title(const char* str, uint16_t x, uint16_t y) {
 
 int draw_xpm_sentence_letter(char c, uint16_t x, uint16_t y) {
   switch (c) {
-    case 'a': return xpm_image_to_screen((xpm_map_t)font_a, x, y);
+    case 'a': return xpm_image_to_screen((xpm_map_t)font_a, x, y); //escreves uma letra em x
     case 'b': return xpm_image_to_screen((xpm_map_t)font_b, x, y);
     case 'c': return xpm_image_to_screen((xpm_map_t)font_c, x, y);
     case 'd': return xpm_image_to_screen((xpm_map_t)font_d, x, y);
@@ -231,6 +231,70 @@ int draw_xpm_sentence_letter(char c, uint16_t x, uint16_t y) {
   }
 }
 
+int draw_xpm_sentence_letterRed(char c, uint16_t x, uint16_t y) {
+  switch (c) {
+    case 'a': return xpm_image_to_screen((xpm_map_t)font_ar, x, y);
+    case 'b': return xpm_image_to_screen((xpm_map_t)font_br, x, y);
+    case 'c': return xpm_image_to_screen((xpm_map_t)font_cr, x, y);
+    case 'd': return xpm_image_to_screen((xpm_map_t)font_dr, x, y);
+    case 'e': return xpm_image_to_screen((xpm_map_t)font_er, x, y);
+    case 'f': return xpm_image_to_screen((xpm_map_t)font_fr, x, y);
+    case 'g': return xpm_image_to_screen((xpm_map_t)font_gr, x, y);
+    case 'h': return xpm_image_to_screen((xpm_map_t)font_hr, x, y);
+    case 'i': return xpm_image_to_screen((xpm_map_t)font_ir, x, y);
+    case 'j': return xpm_image_to_screen((xpm_map_t)font_jr, x, y);
+    case 'k': return xpm_image_to_screen((xpm_map_t)font_kr, x, y);
+    case 'l': return xpm_image_to_screen((xpm_map_t)font_lr, x, y);
+    case 'm': return xpm_image_to_screen((xpm_map_t)font_mr, x, y);
+    case 'n': return xpm_image_to_screen((xpm_map_t)font_nr, x, y);
+    case 'o': return xpm_image_to_screen((xpm_map_t)font_or, x, y);
+    case 'p': return xpm_image_to_screen((xpm_map_t)font_pr, x, y);
+    case 'q': return xpm_image_to_screen((xpm_map_t)font_qr, x, y);
+    case 'r': return xpm_image_to_screen((xpm_map_t)font_rr, x, y);
+    case 's': return xpm_image_to_screen((xpm_map_t)font_sr, x, y);
+    case 't': return xpm_image_to_screen((xpm_map_t)font_tr, x, y);
+    case 'u': return xpm_image_to_screen((xpm_map_t)font_ur, x, y);
+    case 'v': return xpm_image_to_screen((xpm_map_t)font_vr, x, y);
+    case 'w': return xpm_image_to_screen((xpm_map_t)font_wr, x, y);
+    case 'x': return xpm_image_to_screen((xpm_map_t)font_xr, x, y);
+    case 'y': return xpm_image_to_screen((xpm_map_t)font_yr, x, y);
+    case 'z': return xpm_image_to_screen((xpm_map_t)font_zr, x, y);
+    default: return 1;
+  }
+}
+
+int draw_xpm_sentence_letterGreen(char c, uint16_t x, uint16_t y) {
+  switch (c) {
+    case 'a': return xpm_image_to_screen((xpm_map_t)font_ag, x, y);
+    case 'b': return xpm_image_to_screen((xpm_map_t)font_bg, x, y);
+    case 'c': return xpm_image_to_screen((xpm_map_t)font_cg, x, y);
+    case 'd': return xpm_image_to_screen((xpm_map_t)font_dg, x, y);
+    case 'e': return xpm_image_to_screen((xpm_map_t)font_eg, x, y);
+    case 'f': return xpm_image_to_screen((xpm_map_t)font_fg, x, y);
+    case 'g': return xpm_image_to_screen((xpm_map_t)font_gg, x, y);
+    case 'h': return xpm_image_to_screen((xpm_map_t)font_hg, x, y);
+    case 'i': return xpm_image_to_screen((xpm_map_t)font_ig, x, y);
+    case 'j': return xpm_image_to_screen((xpm_map_t)font_jg, x, y);
+    case 'k': return xpm_image_to_screen((xpm_map_t)font_kg, x, y);
+    case 'l': return xpm_image_to_screen((xpm_map_t)font_lg, x, y);
+    case 'm': return xpm_image_to_screen((xpm_map_t)font_mg, x, y);
+    case 'n': return xpm_image_to_screen((xpm_map_t)font_ng, x, y);
+    case 'o': return xpm_image_to_screen((xpm_map_t)font_og, x, y);
+    case 'p': return xpm_image_to_screen((xpm_map_t)font_pg, x, y);
+    case 'q': return xpm_image_to_screen((xpm_map_t)font_qg, x, y);
+    case 'r': return xpm_image_to_screen((xpm_map_t)font_rg, x, y);
+    case 's': return xpm_image_to_screen((xpm_map_t)font_sg, x, y);
+    case 't': return xpm_image_to_screen((xpm_map_t)font_tg, x, y);
+    case 'u': return xpm_image_to_screen((xpm_map_t)font_ug, x, y);
+    case 'v': return xpm_image_to_screen((xpm_map_t)font_vg, x, y);
+    case 'w': return xpm_image_to_screen((xpm_map_t)font_wg, x, y);
+    case 'x': return xpm_image_to_screen((xpm_map_t)font_xg, x, y);
+    case 'y': return xpm_image_to_screen((xpm_map_t)font_yg, x, y);
+    case 'z': return xpm_image_to_screen((xpm_map_t)font_zg, x, y);
+    default: return 1;
+  }
+}
+
 int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
   int spacing = 24;
   for (size_t i = 0; str[i] != '\0'; i++) {
@@ -241,78 +305,22 @@ int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
   return 0;
 }
 
-/*
-int draw_xpm_text(const char* str, uint16_t x, uint16_t y) {
-    uint16_t offset = 0;
-    for (size_t i = 0; str[i]; i++) {
-        xpm_map_t **font_xpm = NULL;
-        switch (str[i]) {
-            
-            
-            case 'A': font_xpm = font_A; break;
-            case 'B': font_xpm = font_B; break;
-            case 'C': font_xpm = font_C; break;
-            case 'D': font_xpm = font_D; break;
-            case 'E': font_xpm = font_E; break;
-            case 'F': font_xpm = font_F; break;
-            case 'G': font_xpm = font_G; break;
-            case 'H': font_xpm = font_H; break;
-            case 'I': font_xpm = font_I; break;
-            case 'J': font_xpm = font_J; break;
-            case 'K': font_xpm = font_K; break;
-            case 'L': font_xpm = font_L; break;
-            case 'M': font_xpm = font_M; break;
-            case 'N': font_xpm = font_N; break;
-            case 'O': font_xpm = font_O; break;
-            case 'P': font_xpm = font_P; break;
-            case 'Q': font_xpm = font_Q; break;
-            case 'R': font_xpm = font_R; break;
-            case 'S': font_xpm = font_S; break;
-            case 'T': font_xpm = font_T; break;
-            case 'U': font_xpm = font_U; break;
-            case 'V': font_xpm = font_V; break;
-            case 'W': font_xpm = font_W; break;
-            case 'X': font_xpm = font_X; break;
-            case 'Y': font_xpm = font_Y; break;
-            case 'Z': font_xpm = font_Z; break;
-
-            case 'a': font_xpm = font_a; break;
-            case 'b': font_xpm = font_b; break;
-            case 'c': font_xpm = font_c; break;
-            case 'd': font_xpm = font_d; break;
-            case 'e': font_xpm = font_e; break;
-            case 'f': font_xpm = font_f; break;
-            case 'g': font_xpm = font_g; break;
-            case 'h': font_xpm = font_h; break;
-            case 'i': font_xpm = font_i; break;
-            case 'j': font_xpm = font_j; break;
-            case 'k': font_xpm = font_k; break;
-            case 'l': font_xpm = font_l; break;
-            case 'm': font_xpm = font_m; break;
-            case 'n': font_xpm = font_n; break;
-            case 'o': font_xpm = font_o; break;
-            case 'p': font_xpm = font_p; break;
-            case 'q': font_xpm = font_q; break;
-            case 'r': font_xpm = font_r; break;
-            case 's': font_xpm = font_s; break;
-            case 't': font_xpm = font_t; break;
-            case 'u': font_xpm = font_u; break;
-            case 'v': font_xpm = font_v; break;
-            case 'w': font_xpm = font_w; break;
-            case 'x': font_xpm = font_x; break;
-            case 'y': font_xpm = font_y; break;
-            case 'z': font_xpm = font_z; break;
-            
-            case ' ':
-                offset += 8;
-                continue;
-            default:
-                offset += 8;
-                continue;
-        }
-        xpm_image_to_screen(font_xpm, x + offset, y);
-        offset += 8;
+int draw_xpm_sentence_red(const char* str, uint16_t x, uint16_t y) {
+  int spacing = 24;
+  for (size_t i = 0; str[i] != '\0'; i++) {
+    if (str[i] != ' ') {
+      draw_xpm_sentence_letterRed(str[i], x + i * spacing, y);
     }
-    return 0;
+  }
+  return 0;
 }
-*/
+
+int draw_xpm_sentence_green(const char* str, uint16_t x, uint16_t y) {
+  int spacing = 24;
+  for (size_t i = 0; str[i] != '\0'; i++) {
+    if (str[i] != ' ') {
+      draw_xpm_sentence_letterGreen(str[i], x + i * spacing, y);
+    }
+  }
+  return 0;
+}

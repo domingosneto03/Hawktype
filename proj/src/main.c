@@ -212,21 +212,20 @@ int draw_initial_screen() {
     }
     int total_width = total_len * 10 + (5 - 1) * 15;
 
-    int x = (cur_mode_info.XResolution - total_width) / 2;
+    int x = (((cur_mode_info.XResolution - total_width) / 2) - 150);
     int y = 200; // middle of the screen, adjust as needed
 
     for (int i = 0; i < 5; i++) {
-        // Phrase word color
-        uint32_t color = 0xE0E0E0; // new default
-        switch (word_list[i].state) {
-            case CORRECT:  color = 0x00FF00; break;
-            case WRONG:    color = 0xFF0000; break;
-            case NOTCHECKED: default: break;
-        }
-
+        
         draw_xpm_sentence(word_list[i].word, x, y);
         //draw_xpm_text(word_list[i].word, x, y);
-        x += strlen(word_list[i].word) * 10 + 15;
+        
+        switch (word_list[i].state) {
+            case CORRECT:  draw_xpm_sentence_green(word_list[i].word, x, y); break;
+            case WRONG:    draw_xpm_sentence_red(word_list[i].word, x, y); break;
+            case NOTCHECKED: default: break;
+        }
+        x += strlen(word_list[i].word) * 24 + 35;
     }
 
     // --- Textbox layout ---
@@ -236,16 +235,16 @@ int draw_initial_screen() {
     int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
     // Label
-    draw_text("Type here:", box_x - 110, box_y + 9, 0xCCCCCC); // light gray label
+    draw_xpm_sentence("type", box_x - 110, box_y + 9); // light gray label
 
     // Textbox outline
     draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0xDDDDDD);
 
     // Textbox background
-    draw_rectangle(box_x, box_y, box_width, box_height, 0x555555);
+    draw_rectangle(box_x, box_y, box_width, box_height, 0x1E1E2E);
 
     // User text
-    draw_text(cur_typed_word, box_x + 8, box_y + 8, 0xFFFFFF);
+    draw_xpm_sentence(cur_typed_word, box_x + 8, box_y + 8);
 
 
     return 0;
