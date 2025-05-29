@@ -344,8 +344,8 @@ int (main_interrupt_handler)(){
                 
                 if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
                     kbc_ih();
-                    game_state = STARTED;
                     if(game_state!=STATS){
+                        game_state = STARTED;
                         uint8_t make;
                         //int num_bytes; 
                         int scan_handler;
@@ -406,6 +406,7 @@ int (main_interrupt_handler)(){
             correct_words = 0;
             cur_word_count = 0;
             final_time = 0; //maybe desnesseário
+            game_time = last_game_time;   
             word_scrambler();
             game_state = RESETING;
 
@@ -419,8 +420,7 @@ int (main_interrupt_handler)(){
 
         if(game_state==RESETING){
             if(cur_scancode == 0x39){     //espaço tá a dar reset ao jogo
-                game_state = WAITING;
-                game_time = last_game_time;       
+                game_state = WAITING;    
             }
         }
 
