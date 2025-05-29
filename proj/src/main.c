@@ -398,9 +398,12 @@ int (main_interrupt_handler)(){
             //float cor_words = correct_words;
             int percent = (100 * correct_words) / cur_word_count;
             int decimal = (1000 * correct_words) / cur_word_count % 10;
+            int used_time = last_game_time-final_time;
             printf("wrong words: %d\n", wrong_words);
             printf("correct words: %d\n", correct_words);
-            printf("wpm: %d\n", (cur_word_count*60/final_time));
+            printf("used time: %d\n",used_time );
+            printf("wpm: %d\n", (cur_word_count*60/used_time));
+            printf("cheguei aqui\n");
             printf("accuracy: %d.%d%%\n", percent, decimal);
             wrong_words = 0;    
             correct_words = 0;
@@ -433,8 +436,6 @@ int (main_interrupt_handler)(){
         if(cur_scancode == BREAK_ESQ) game_state = EXIT; //isto será retirado (ou nao)
 
     }
-    
-
     vg_exit();
     printf("\033[2J\033[H");
 
