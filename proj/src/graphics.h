@@ -23,10 +23,8 @@ int (direct_mode)(int j, int i, uint32_t first, uint8_t step, uint32_t *color);
 
 int (xpm_image_to_screen)(xpm_map_t xmp, uint16_t x, uint16_t y);
 
-int (draw_char)(uint16_t x, uint16_t y, char c, uint32_t color);
-
-int (draw_xpm_title_letter)(char c, uint16_t x, uint16_t y);
-
 int (draw_xpm_title)(const char* str, uint16_t x, uint16_t y);
+
+int (draw_xpm_sentence)(const char* str, uint16_t x, uint16_t y, const char* color);
 
 #endif

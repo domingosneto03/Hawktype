@@ -57,6 +57,7 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
+    "*.pl": "prolog",
     "locale": "c",
     "string": "c",
     "__locale": "c",
@@ -68,6 +69,7 @@
     "sysutil.h": "c",
     "kbc.h": "c",
     "keyboard.h": "c",
-    "MAIN.C": "cpp"
+    "MAIN.C": "cpp",
+    "*.xpm": "c"
   }
 }

@@ -40,17 +40,6 @@ struct words{
 
 struct words word_list[MAX_GAME_WORDS];
 
-int draw_text(const char* str, uint16_t x, uint16_t y, uint32_t color) {
-    int spacing = 10;
-    for (size_t i = 0; str[i] != '\0'; i++) {
-        char c = str[i];
-        if (c != ' ') {
-            draw_char(x + i * spacing, y, c, color);
-        }
-    }
-    return 0;
-}
-
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -232,61 +221,60 @@ void (word_scrambler)(){
 }
 
 int draw_initial_screen() {
-    if (set_frame_buffer(VBE_768p_INDEXED) != 0) return 1;
-    if (set_graphic_mode(VBE_768p_INDEXED) != 0) return 1;
+    if (set_frame_buffer(0x114) != 0) return 1;
+    if (set_graphic_mode(0x114) != 0) return 1;
 
-    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x11);
+    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
+
 
     // Title
-    //draw_xpm_title("HAWKTYPE", 10, 10);
-    //draw_xpm_title("H", 10, 10);
+    draw_xpm_title("HAWKTYPE", 10, 10);
 
-   // Determine total width of phrase
-    int total_len = 0;
-    for (int i = 0; i < 5; i++) {
-        total_len += strlen(word_list[i].word);
-    }
-    int total_width = total_len * 10 + (5 - 1) * 15;
+    int margin_x = 60;
+    int line_spacing = 30;
+    int word_spacing = 15;
+    int cursor_x = margin_x;
+    int cursor_y = 200;
+    int max_x = cur_mode_info.XResolution - margin_x;
+    int num_words = 25;
 
-    int x = (cur_mode_info.XResolution - total_width) / 2;
-    int y = 250; // middle of the screen, adjust as needed
+    for (int i = 0; i < num_words; i++) {
+        int word_width = strlen(word_list[i].word) * 15;
 
-    for (int i = 0; i < 5; i++) {
-        // Phrase word color
-        uint32_t color = 0x37; // new default
-        switch (word_list[i].state) {
-            case CORRECT:  color = 0x2A; break;
-            case WRONG:    color = 0x21; break;
-            case NOTCHECKED: default: break;
+        if (cursor_x + word_width > max_x) {
+            cursor_x = margin_x;
+            cursor_y += line_spacing;
         }
 
-        draw_text(word_list[i].word, x, y, color);
-        x += strlen(word_list[i].word) * 10 + 15;
+        draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y, "default");
+        switch (word_list[i].state) {
+            case CORRECT: draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y, "green"); break;
+            case WRONG: draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y, "red"); break;
+            case NOTCHECKED:
+            default: break;
+        }
+
+        cursor_x += word_width + word_spacing;
     }
 
     // --- Textbox layout ---
     int box_width = 400;
     int box_height = 30;
     int box_x = (cur_mode_info.XResolution - box_width) / 2;
-    int box_y = cur_mode_info.YResolution - 200; // e.g. 500 for 600p
+    int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
     // Label
-    if(draw_text("Type here:", box_x - 110, box_y + 9, 0x37) != 0) {
-        return 1;
-    } // light gray label
+    draw_xpm_sentence("type", box_x - 80, box_y + 4, "default"); // light gray label
 
     // Textbox outline
-    if(draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0x2A) !=0) {
-        return 1;
-    }
+    draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0xDDDDDD);
+
     // Textbox background
-    if(draw_rectangle(box_x, box_y, box_width, box_height, 0x37) != 0) {
-        return 1;
-    }
+    draw_rectangle(box_x, box_y, box_width, box_height, 0x1E1E2E);
+
     // User text
-    if(draw_text(cur_typed_word, box_x + 8, box_y + 8, 0x2A)!=0) {
-        return 1;
-    }
+    draw_xpm_sentence(cur_typed_word, box_x + 8, box_y + 8, "default");
+
 
     return 0;
 }
