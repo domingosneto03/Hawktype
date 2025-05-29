@@ -296,7 +296,7 @@ int draw_xpm_sentence_letterGreen(char c, uint16_t x, uint16_t y) {
 }
 
 int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
-  int spacing = 24;
+  int spacing = 15;
   for (size_t i = 0; str[i] != '\0'; i++) {
     if (str[i] != ' ') {
       draw_xpm_sentence_letter(str[i], x + i * spacing, y);
@@ -306,7 +306,7 @@ int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
 }
 
 int draw_xpm_sentence_red(const char* str, uint16_t x, uint16_t y) {
-  int spacing = 24;
+  int spacing = 15;
   for (size_t i = 0; str[i] != '\0'; i++) {
     if (str[i] != ' ') {
       draw_xpm_sentence_letterRed(str[i], x + i * spacing, y);
@@ -316,7 +316,7 @@ int draw_xpm_sentence_red(const char* str, uint16_t x, uint16_t y) {
 }
 
 int draw_xpm_sentence_green(const char* str, uint16_t x, uint16_t y) {
-  int spacing = 24;
+  int spacing = 15;
   for (size_t i = 0; str[i] != '\0'; i++) {
     if (str[i] != ' ') {
       draw_xpm_sentence_letterGreen(str[i], x + i * spacing, y);

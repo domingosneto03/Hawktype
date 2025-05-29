@@ -28,7 +28,27 @@ struct words{
     enum wordstate state;
 };
 
-struct words word_list[5] = {
+struct words word_list[25] = {
+    { "hello", NOTCHECKED },
+    { "world", NOTCHECKED },
+    { "how",   NOTCHECKED },
+    { "are",   NOTCHECKED },
+    { "you",   NOTCHECKED },
+    { "hello", NOTCHECKED },
+    { "world", NOTCHECKED },
+    { "how",   NOTCHECKED },
+    { "are",   NOTCHECKED },
+    { "you",   NOTCHECKED },
+    { "hello", NOTCHECKED },
+    { "world", NOTCHECKED },
+    { "how",   NOTCHECKED },
+    { "are",   NOTCHECKED },
+    { "you",   NOTCHECKED },
+    { "hello", NOTCHECKED },
+    { "world", NOTCHECKED },
+    { "how",   NOTCHECKED },
+    { "are",   NOTCHECKED },
+    { "you",   NOTCHECKED },
     { "hello", NOTCHECKED },
     { "world", NOTCHECKED },
     { "how",   NOTCHECKED },
@@ -205,27 +225,31 @@ int draw_initial_screen() {
     // Title
     draw_xpm_title("HAWKTYPE", 10, 10);
 
-   // Determine total width of phrase
-    int total_len = 0;
-    for (int i = 0; i < 5; i++) {
-        total_len += strlen(word_list[i].word);
-    }
-    int total_width = total_len * 10 + (5 - 1) * 15;
+    int margin_x = 60;
+    int line_spacing = 30;
+    int word_spacing = 15;
+    int cursor_x = margin_x;
+    int cursor_y = 200;
+    int max_x = cur_mode_info.XResolution - margin_x;
+    int num_words = 25;
 
-    int x = (((cur_mode_info.XResolution - total_width) / 2) - 150);
-    int y = 200; // middle of the screen, adjust as needed
+    for (int i = 0; i < num_words; i++) {
+        int word_width = strlen(word_list[i].word) * 15;
 
-    for (int i = 0; i < 5; i++) {
-        
-        draw_xpm_sentence(word_list[i].word, x, y);
-        //draw_xpm_text(word_list[i].word, x, y);
-        
-        switch (word_list[i].state) {
-            case CORRECT:  draw_xpm_sentence_green(word_list[i].word, x, y); break;
-            case WRONG:    draw_xpm_sentence_red(word_list[i].word, x, y); break;
-            case NOTCHECKED: default: break;
+        if (cursor_x + word_width > max_x) {
+            cursor_x = margin_x;
+            cursor_y += line_spacing;
         }
-        x += strlen(word_list[i].word) * 24 + 35;
+
+        draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y);
+        switch (word_list[i].state) {
+            case CORRECT: draw_xpm_sentence_green(word_list[i].word, cursor_x, cursor_y); break;
+            case WRONG: draw_xpm_sentence_red(word_list[i].word, cursor_x, cursor_y); break;
+            case NOTCHECKED:
+            default: break;
+        }
+
+        cursor_x += word_width + word_spacing;
     }
 
     // --- Textbox layout ---
@@ -235,7 +259,7 @@ int draw_initial_screen() {
     int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
     // Label
-    draw_xpm_sentence("type", box_x - 110, box_y + 9); // light gray label
+    draw_xpm_sentence("type", box_x - 80, box_y + 4); // light gray label
 
     // Textbox outline
     draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0xDDDDDD);
@@ -258,7 +282,7 @@ int (main_interrupt_handler)(){
     message msg;
 
     //tem de ser mudado ----- IMPORTANT
-    int total_words = 5;
+    int total_words = 25;
     int cur_word_count = 0;
     int correct_words = 0;
     int wrong_words = 0;
