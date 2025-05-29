@@ -1,6 +1,5 @@
 #include "graphics.h"
-#include "font.h"
-#include "include_xpm.h"
+#include "xpm_font.h"
 
 vbe_mode_info_t cur_mode_info;
 uint8_t* frame_buf;
@@ -158,169 +157,30 @@ int xpm_image_to_screen(xpm_map_t xmp, uint16_t x, uint16_t y) {
     return 0;
 }
 
-
-int draw_char(uint16_t x, uint16_t y, char c, uint32_t color) {
-    uint8_t *glyph = font_bitmaps[(uint8_t)c];
-    for (int row = 0; row < 16; row++)
-        for (int col = 0; col < 8; col++)
-            if (glyph[row] & (1 << (7 - col)))
-                if (draw_pixel(x + col, y + row, color))
-                    return 1;
-    return 0;
-}
-
-int draw_xpm_title_letter(char c, uint16_t x, uint16_t y) {
-     printf(" -> drawing %c\n", c);
-  switch (c) {
-    case 'H': return xpm_image_to_screen((xpm_map_t)title_H, x, y);
-    case 'A': return xpm_image_to_screen((xpm_map_t)title_A, x, y);
-    case 'W': return xpm_image_to_screen((xpm_map_t)title_W, x, y);
-    case 'K': return xpm_image_to_screen((xpm_map_t)title_K, x, y);
-    case 'T': return xpm_image_to_screen((xpm_map_t)title_T, x, y);
-    case 'Y': return xpm_image_to_screen((xpm_map_t)title_Y, x, y);
-    case 'P': return xpm_image_to_screen((xpm_map_t)title_P, x, y);
-    case 'E': return xpm_image_to_screen((xpm_map_t)title_E, x, y);
-    default: return 1; // unknown char
-  }
-}
-
 int draw_xpm_title(const char* str, uint16_t x, uint16_t y) {
     int spacing = 36;
     for (size_t i = 0; str[i] != '\0'; i++) {
-        printf("drawing letter: %c\n", str[i]);
         if (str[i] != ' ') {
-            int result = draw_xpm_title_letter(str[i], x + i * spacing, y);
-            if (result != 0) {
-                printf("Failed to draw letter: %c\n", str[i]);
-                return 1;
-            }
+            draw_xpm_title_letter(str[i], x + i * spacing, y);
         }
     }
     return 0;
 }
 
-int draw_xpm_sentence_letter(char c, uint16_t x, uint16_t y) {
-  switch (c) {
-    case 'a': return xpm_image_to_screen((xpm_map_t)font_a, x, y); //escreves uma letra em x
-    case 'b': return xpm_image_to_screen((xpm_map_t)font_b, x, y);
-    case 'c': return xpm_image_to_screen((xpm_map_t)font_c, x, y);
-    case 'd': return xpm_image_to_screen((xpm_map_t)font_d, x, y);
-    case 'e': return xpm_image_to_screen((xpm_map_t)font_e, x, y);
-    case 'f': return xpm_image_to_screen((xpm_map_t)font_f, x, y);
-    case 'g': return xpm_image_to_screen((xpm_map_t)font_g, x, y);
-    case 'h': return xpm_image_to_screen((xpm_map_t)font_h, x, y);
-    case 'i': return xpm_image_to_screen((xpm_map_t)font_i, x, y);
-    case 'j': return xpm_image_to_screen((xpm_map_t)font_j, x, y);
-    case 'k': return xpm_image_to_screen((xpm_map_t)font_k, x, y);
-    case 'l': return xpm_image_to_screen((xpm_map_t)font_l, x, y);
-    case 'm': return xpm_image_to_screen((xpm_map_t)font_m, x, y);
-    case 'n': return xpm_image_to_screen((xpm_map_t)font_n, x, y);
-    case 'o': return xpm_image_to_screen((xpm_map_t)font_o, x, y);
-    case 'p': return xpm_image_to_screen((xpm_map_t)font_p, x, y);
-    case 'q': return xpm_image_to_screen((xpm_map_t)font_q, x, y);
-    case 'r': return xpm_image_to_screen((xpm_map_t)font_r, x, y);
-    case 's': return xpm_image_to_screen((xpm_map_t)font_s, x, y);
-    case 't': return xpm_image_to_screen((xpm_map_t)font_t, x, y);
-    case 'u': return xpm_image_to_screen((xpm_map_t)font_u, x, y);
-    case 'v': return xpm_image_to_screen((xpm_map_t)font_v, x, y);
-    case 'w': return xpm_image_to_screen((xpm_map_t)font_w, x, y);
-    case 'x': return xpm_image_to_screen((xpm_map_t)font_x, x, y);
-    case 'y': return xpm_image_to_screen((xpm_map_t)font_y, x, y);
-    case 'z': return xpm_image_to_screen((xpm_map_t)font_z, x, y);
-    default: return 1;
-  }
-}
-
-int draw_xpm_sentence_letterRed(char c, uint16_t x, uint16_t y) {
-  switch (c) {
-    case 'a': return xpm_image_to_screen((xpm_map_t)font_ar, x, y);
-    case 'b': return xpm_image_to_screen((xpm_map_t)font_br, x, y);
-    case 'c': return xpm_image_to_screen((xpm_map_t)font_cr, x, y);
-    case 'd': return xpm_image_to_screen((xpm_map_t)font_dr, x, y);
-    case 'e': return xpm_image_to_screen((xpm_map_t)font_er, x, y);
-    case 'f': return xpm_image_to_screen((xpm_map_t)font_fr, x, y);
-    case 'g': return xpm_image_to_screen((xpm_map_t)font_gr, x, y);
-    case 'h': return xpm_image_to_screen((xpm_map_t)font_hr, x, y);
-    case 'i': return xpm_image_to_screen((xpm_map_t)font_ir, x, y);
-    case 'j': return xpm_image_to_screen((xpm_map_t)font_jr, x, y);
-    case 'k': return xpm_image_to_screen((xpm_map_t)font_kr, x, y);
-    case 'l': return xpm_image_to_screen((xpm_map_t)font_lr, x, y);
-    case 'm': return xpm_image_to_screen((xpm_map_t)font_mr, x, y);
-    case 'n': return xpm_image_to_screen((xpm_map_t)font_nr, x, y);
-    case 'o': return xpm_image_to_screen((xpm_map_t)font_or, x, y);
-    case 'p': return xpm_image_to_screen((xpm_map_t)font_pr, x, y);
-    case 'q': return xpm_image_to_screen((xpm_map_t)font_qr, x, y);
-    case 'r': return xpm_image_to_screen((xpm_map_t)font_rr, x, y);
-    case 's': return xpm_image_to_screen((xpm_map_t)font_sr, x, y);
-    case 't': return xpm_image_to_screen((xpm_map_t)font_tr, x, y);
-    case 'u': return xpm_image_to_screen((xpm_map_t)font_ur, x, y);
-    case 'v': return xpm_image_to_screen((xpm_map_t)font_vr, x, y);
-    case 'w': return xpm_image_to_screen((xpm_map_t)font_wr, x, y);
-    case 'x': return xpm_image_to_screen((xpm_map_t)font_xr, x, y);
-    case 'y': return xpm_image_to_screen((xpm_map_t)font_yr, x, y);
-    case 'z': return xpm_image_to_screen((xpm_map_t)font_zr, x, y);
-    default: return 1;
-  }
-}
-
-int draw_xpm_sentence_letterGreen(char c, uint16_t x, uint16_t y) {
-  switch (c) {
-    case 'a': return xpm_image_to_screen((xpm_map_t)font_ag, x, y);
-    case 'b': return xpm_image_to_screen((xpm_map_t)font_bg, x, y);
-    case 'c': return xpm_image_to_screen((xpm_map_t)font_cg, x, y);
-    case 'd': return xpm_image_to_screen((xpm_map_t)font_dg, x, y);
-    case 'e': return xpm_image_to_screen((xpm_map_t)font_eg, x, y);
-    case 'f': return xpm_image_to_screen((xpm_map_t)font_fg, x, y);
-    case 'g': return xpm_image_to_screen((xpm_map_t)font_gg, x, y);
-    case 'h': return xpm_image_to_screen((xpm_map_t)font_hg, x, y);
-    case 'i': return xpm_image_to_screen((xpm_map_t)font_ig, x, y);
-    case 'j': return xpm_image_to_screen((xpm_map_t)font_jg, x, y);
-    case 'k': return xpm_image_to_screen((xpm_map_t)font_kg, x, y);
-    case 'l': return xpm_image_to_screen((xpm_map_t)font_lg, x, y);
-    case 'm': return xpm_image_to_screen((xpm_map_t)font_mg, x, y);
-    case 'n': return xpm_image_to_screen((xpm_map_t)font_ng, x, y);
-    case 'o': return xpm_image_to_screen((xpm_map_t)font_og, x, y);
-    case 'p': return xpm_image_to_screen((xpm_map_t)font_pg, x, y);
-    case 'q': return xpm_image_to_screen((xpm_map_t)font_qg, x, y);
-    case 'r': return xpm_image_to_screen((xpm_map_t)font_rg, x, y);
-    case 's': return xpm_image_to_screen((xpm_map_t)font_sg, x, y);
-    case 't': return xpm_image_to_screen((xpm_map_t)font_tg, x, y);
-    case 'u': return xpm_image_to_screen((xpm_map_t)font_ug, x, y);
-    case 'v': return xpm_image_to_screen((xpm_map_t)font_vg, x, y);
-    case 'w': return xpm_image_to_screen((xpm_map_t)font_wg, x, y);
-    case 'x': return xpm_image_to_screen((xpm_map_t)font_xg, x, y);
-    case 'y': return xpm_image_to_screen((xpm_map_t)font_yg, x, y);
-    case 'z': return xpm_image_to_screen((xpm_map_t)font_zg, x, y);
-    default: return 1;
-  }
-}
-
-int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y) {
-  int spacing = 15;
-  for (size_t i = 0; str[i] != '\0'; i++) {
-    if (str[i] != ' ') {
-      draw_xpm_sentence_letter(str[i], x + i * spacing, y);
+int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y, const char* color) {
+    int spacing = 15;
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        if (str[i] != ' ') {
+            if (strcmp(color, "green") == 0) {
+                draw_xpm_sentence_letter_green(str[i], x + i * spacing, y);
+            }
+            else if (strcmp(color, "red") == 0) {
+                draw_xpm_sentence_letter_red(str[i], x + i * spacing, y);
+            }
+            else {
+                draw_xpm_sentence_letter(str[i], x + i * spacing, y);
+            }
+        }
     }
-  }
-  return 0;
-}
-
-int draw_xpm_sentence_red(const char* str, uint16_t x, uint16_t y) {
-  int spacing = 15;
-  for (size_t i = 0; str[i] != '\0'; i++) {
-    if (str[i] != ' ') {
-      draw_xpm_sentence_letterRed(str[i], x + i * spacing, y);
-    }
-  }
-  return 0;
-}
-
-int draw_xpm_sentence_green(const char* str, uint16_t x, uint16_t y) {
-  int spacing = 15;
-  for (size_t i = 0; str[i] != '\0'; i++) {
-    if (str[i] != ' ') {
-      draw_xpm_sentence_letterGreen(str[i], x + i * spacing, y);
-    }
-  }
-  return 0;
+    return 0;
 }

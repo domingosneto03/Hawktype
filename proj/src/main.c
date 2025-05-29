@@ -56,17 +56,6 @@ struct words word_list[25] = {
     { "you",   NOTCHECKED }
 };
 
-int draw_text(const char* str, uint16_t x, uint16_t y, uint32_t color) {
-    int spacing = 10;
-    for (size_t i = 0; str[i] != '\0'; i++) {
-        char c = str[i];
-        if (c != ' ') {
-            draw_char(x + i * spacing, y, c, color);
-        }
-    }
-    return 0;
-}
-
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -241,10 +230,10 @@ int draw_initial_screen() {
             cursor_y += line_spacing;
         }
 
-        draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y);
+        draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y, "default");
         switch (word_list[i].state) {
-            case CORRECT: draw_xpm_sentence_green(word_list[i].word, cursor_x, cursor_y); break;
-            case WRONG: draw_xpm_sentence_red(word_list[i].word, cursor_x, cursor_y); break;
+            case CORRECT: draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y, "green"); break;
+            case WRONG: draw_xpm_sentence(word_list[i].word, cursor_x, cursor_y, "red"); break;
             case NOTCHECKED:
             default: break;
         }
@@ -259,7 +248,7 @@ int draw_initial_screen() {
     int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
     // Label
-    draw_xpm_sentence("type", box_x - 80, box_y + 4); // light gray label
+    draw_xpm_sentence("type", box_x - 80, box_y + 4, "default"); // light gray label
 
     // Textbox outline
     draw_rectangle(box_x - 2, box_y - 2, box_width + 4, box_height + 4, 0xDDDDDD);
@@ -268,7 +257,7 @@ int draw_initial_screen() {
     draw_rectangle(box_x, box_y, box_width, box_height, 0x1E1E2E);
 
     // User text
-    draw_xpm_sentence(cur_typed_word, box_x + 8, box_y + 8);
+    draw_xpm_sentence(cur_typed_word, box_x + 8, box_y + 8, "default");
 
 
     return 0;
