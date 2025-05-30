@@ -11,6 +11,7 @@
 #include "i8254.h"
 #include "words_list.h"
 #include "mouse.c"
+#include "xpm_font.h"
 
 
 extern vbe_mode_info_t cur_mode_info;
@@ -20,6 +21,9 @@ int mouse_x = 400;
 int mouse_y = 300;
 extern struct packet mouse_packet;
 uint8_t cursor_visible = 1;
+// --- Textbox layout ---
+int box_width = 400;
+int box_height = 30;
 
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
@@ -276,22 +280,16 @@ int draw_mouse_cursor() {
     return draw_xpm_cursor(mouse_x, mouse_y);
 }
 
+const int margin_x = 60;
+const int line_spacing = 30;
+const int word_spacing = 15;
+const int num_words = 25;
 
-int draw_initial_screen() {
+int draw_sentence(){
 
-    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
-
-
-    // Title
-    draw_xpm_title("HAWKTYPE", 10, 10);
-
-    int margin_x = 60;
-    int line_spacing = 30;
-    int word_spacing = 15;
     int cursor_x = margin_x;
     int cursor_y = 200;
     int max_x = cur_mode_info.XResolution - margin_x;
-    int num_words = 25;
 
     for (int i = 0; i < num_words; i++) {
         int word_width = strlen(word_list[i].word) * 15;
@@ -312,9 +310,11 @@ int draw_initial_screen() {
         cursor_x += word_width + word_spacing;
     }
 
-    // --- Textbox layout ---
-    int box_width = 400;
-    int box_height = 30;
+    return 0;
+}
+  
+
+int draw_input() {
     int box_x = (cur_mode_info.XResolution - box_width) / 2;
     int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
@@ -330,9 +330,33 @@ int draw_initial_screen() {
     // User text
     draw_xpm_sentence(cur_typed_word, box_x + 8, box_y + 8, "default");
 
-    // Draw mouse cursor
-    draw_mouse_cursor();
+    return 0;
+}
 
+int draw_top_menu() {
+    // int menu_x = 50;
+    // int menu_y = 50;
+    // int menu_width = 200;
+    // int menu_height = 50;
+    
+    // draw_xpm_button_15(menu_x + 10, menu_y + 10); // 15 seconds button 
+    // draw_xpm_button_30(menu_x + 70, menu_y + 10); // 30 seconds button
+    // draw_xpm_button_60(menu_x + 130, menu_y + 10); // 60 seconds button
+
+    return 0;
+}
+
+int draw_initial_screen() {
+
+    draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
+
+    // Title
+    draw_xpm_title("HAWKTYPE", 200, 30);
+    draw_top_menu();
+    draw_sentence();
+    draw_input();
+
+    draw_mouse_cursor();
 
     return 0;
 }
@@ -458,8 +482,6 @@ int (main_interrupt_handler)(){
 
                         
                         // Update cursor position
-                        int old_x = mouse_x;
-                        int old_y = mouse_y;
                         mouse_x += mouse_packet.delta_x;
                         mouse_y -= mouse_packet.delta_y;  // Invert Y-axis
                         
@@ -472,16 +494,10 @@ int (main_interrupt_handler)(){
                             mouse_y = cur_mode_info.YResolution - 16;
                         
 
-                        printf("Mouse Packet: lb=%d, rb=%d, mb=%d, dx=%d, dy=%d\n",
-                            mouse_packet.lb, mouse_packet.rb, mouse_packet.mb,
-                            mouse_packet.delta_x, mouse_packet.delta_y);
-
-                        printf("Mouse Position: %d,%d -> %d,%d\n", 
-                            old_x, old_y, mouse_x, mouse_y);
-
                         // Draw the cursor at the new position
-
-                        draw_mouse_cursor();
+                        
+                        draw_initial_screen(); // Clear the screen
+                        swap_buffers(); // Swap buffers to show the cleared screen
 
                         byte_index = 0;
                     }

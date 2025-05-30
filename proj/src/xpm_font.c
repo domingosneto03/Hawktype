@@ -198,7 +198,16 @@ int draw_xpm_sentence_letter_green(char c, uint16_t x, uint16_t y) {
 // nao sei se isto vai funcionar talvez seja preciso criar uma funcao draw_xpm_cursor
 int draw_xpm_cursor(uint16_t x, uint16_t y) {
   // Use the regular_cursor XPM
-  printf("Drawing cursor at: X=%d, Y=%d\n", x, y);
   return xpm_image_to_screen((xpm_map_t)regular_cursor, x, y);
+}
+
+int draw_xpm_button_15(uint16_t x, uint16_t y) {
+  return xpm_image_to_screen((xpm_map_t)sec_15, x, y);
+}
+int draw_xpm_button_30(uint16_t x, uint16_t y) {
+  return xpm_image_to_screen((xpm_map_t)sec_30, x, y);
+}
+int draw_xpm_button_60(uint16_t x, uint16_t y) {
+  return xpm_image_to_screen((xpm_map_t)sec_60, x, y);
 }
 
