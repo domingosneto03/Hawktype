@@ -17,7 +17,7 @@
 extern vbe_mode_info_t cur_mode_info;
 extern uint8_t cur_scancode;
 extern int timer_counter; 
-int mouse_x = 153;
+int mouse_x = 120 + 171;
 int mouse_y = 124;
 extern struct packet mouse_packet;
 uint8_t cursor_visible = 1;
@@ -42,11 +42,6 @@ enum wordstate{
     WRONG,
 };
 
-enum game_times{
-    I15S,
-    I30S,
-    I60S
-};
 
 enum game_languages{
     ENG,
@@ -373,12 +368,20 @@ int draw_top_menu() {
     return 0;
 }
 
+int draw_timer(int game_time) {
+
+    draw_xpm_sentence("Time left: ", 500, menu_y, "default");
+    draw_xpm_numbers(game_time, 500, button_y);
+
+    return 0;
+}
+
 
 bool button_15_clicked = false;
 bool button_30_clicked = true;
 bool button_60_clicked = false;
 
-int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
+int time_button_handler(int x, int y) {
 
     if (x > button_15_x && x < button_15_x + 60 &&
         y > button_y && y < button_y + 30) {
@@ -388,8 +391,9 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
                 button_15_clicked = true;
                 button_30_clicked = false;
                 button_60_clicked = false;
-                //printf("15 seconds selected\n");
-                //printf("Game time set to %d seconds\n", game_time);
+                printf("15 seconds selected\n");
+                printf("Game time set to %d seconds\n", game_time);
+                draw_timer(game_time);
             }
         }
     } else if (x > button_30_x && x < button_30_x + 60 &&
@@ -400,21 +404,24 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
                 button_15_clicked = false;
                 button_30_clicked = true;
                 button_60_clicked = false;
-                //printf("30 seconds selected\n");
-                //printf("Game time set to %d seconds\n", game_time);
+                printf("30 seconds selected\n");
+                printf("Game time set to %d seconds\n", game_time);
+                draw_timer(game_time);
             }
         }
     } else if (x > button_60_x && x < button_60_x + 60 &&
                y > button_y && y < button_y + 30) {
-            if (mouse_packet.lb) {
-                if(!button_60_clicked) {
+            if (!button_60_clicked) {
+                if(mouse_packet.lb) {
                     game_time = 60; 
                     button_15_clicked = false;
                     button_30_clicked = false;
                     button_60_clicked = true;
-                    //printf("60 seconds selected\n");
+                    printf("60 seconds selected\n");
+                    draw_timer(game_time);
                 }
             }
+    
     } else {
         return -1; // Invalid click
     }
@@ -423,13 +430,65 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
     return 0;
 }
 
-int draw_timer(int game_time) {
+int button_eng_clicked = false;
+int button_por_clicked = true;
+int button_esp_clicked = false;
 
-    draw_xpm_sentence("Time left: ", 500, menu_y, "default");
-    draw_xpm_numbers(game_time, 500, button_y);
+int language_button_handler(int x, int y, int last_game_time) {
 
+    if (x > button_eng_x && x < button_eng_x + 70 &&
+        y > button_y && y < button_y + 30) {
+        if(!button_eng_clicked) {
+            if (mouse_packet.lb) {
+                cur_game_lang = ENG;
+                button_eng_clicked = true;
+                button_por_clicked = false;
+                button_esp_clicked = false;
+                printf("English selected\n");
+                printf("Language set to English\n");
+                word_scrambler();
+                draw_sentence();
+                game_time = last_game_time; 
+            }
+        }
+    } else if (x > button_por_x && x < button_por_x + 70 &&
+            y > button_y && y < button_y + 30) {
+            if(!button_por_clicked) {
+                if (mouse_packet.lb) {
+                    cur_game_lang = PT;
+                    button_eng_clicked = false;
+                    button_por_clicked = true;
+                    button_esp_clicked = false;
+                    printf("Portuguese selected\n");
+                    printf("Language set to Portuguese\n");
+                    word_scrambler();
+                    draw_sentence();
+                    game_time = last_game_time;
+                }
+            }
+    } else if (x > button_esp_x && x < button_esp_x + 70 &&
+               y > button_y && y < button_y + 30) {
+        if(!button_esp_clicked) {
+            if (mouse_packet.lb) {
+                cur_game_lang = ESP;
+                button_eng_clicked = false;
+                button_por_clicked = false;
+                button_esp_clicked = true;
+                printf("Spanish selected\n");
+                printf("Language set to Spanish\n");
+                word_scrambler();
+                draw_sentence();
+                game_time = last_game_time;
+            }
+        }
+    } else {
+        return -1; // Invalid click
+    }
+
+    // last_game_time = game_time; // Update last_game_time for display purposes
     return 0;
 }
+
 
 int draw_initial_screen(int game_time) {
 
@@ -518,7 +577,79 @@ int (main_interrupt_handler)(){
                 
                 if (msg.m_notify.interrupts & irq_keyboard) { /* subscribed interrupt */
                     kbc_ih();
-                    if(game_state!=STATS){
+                    if (game_state == WAITING){
+
+                        if (cur_scancode == 0x02) {
+                            if (!button_15_clicked) {
+                                game_time = 15; 
+                                button_15_clicked = true;
+                                button_30_clicked = false;
+                                button_60_clicked = false;
+                                printf("15 seconds selected\n");
+                                printf("Game time set to %d seconds\n", game_time);
+                                draw_timer(game_time);
+                            }
+                        } else if (cur_scancode == 0x03) {
+                            if (!button_30_clicked) {
+                                game_time = 30; 
+                                button_15_clicked = false;
+                                button_30_clicked = true;
+                                button_60_clicked = false;
+                                printf("30 seconds selected\n");
+                                printf("Game time set to %d seconds\n", game_time);
+                                draw_timer(game_time);
+                            }
+                        } else if (cur_scancode == 0x04) {
+                            if (!button_60_clicked) {
+                                game_time = 60; 
+                                button_15_clicked = false;
+                                button_30_clicked = false;
+                                button_60_clicked = true;
+                                printf("60 seconds selected\n");
+                                draw_timer(game_time);
+                            }
+                    
+                        } else if (cur_scancode == 0x05) {
+                            if (!button_eng_clicked) {
+                                cur_game_lang = ENG;
+                                button_eng_clicked = true;
+                                button_por_clicked = false;
+                                button_esp_clicked = false;
+                                printf("English selected\n");
+                                printf("Language set to English\n");
+                                word_scrambler();
+                                draw_sentence();
+                                game_time = last_game_time; 
+                                
+                            }
+                        } else if (cur_scancode == 0x06) {
+                            if (!button_por_clicked) {
+                                cur_game_lang = PT;
+                                button_eng_clicked = false;
+                                button_por_clicked = true;
+                                button_esp_clicked = false;
+                                printf("Portuguese selected\n");
+                                printf("Language set to Portuguese\n");
+                                word_scrambler();
+                                draw_sentence();
+                                game_time = last_game_time;
+                            }
+                        } else if (cur_scancode == 0x07) {
+                            if (!button_esp_clicked) {
+                                cur_game_lang = ESP;
+                                button_eng_clicked = false;
+                                button_por_clicked = false;
+                                button_esp_clicked = true;
+                                printf("Spanish selected\n");
+                                printf("Language set to Spanish\n");
+                                word_scrambler();
+                                draw_sentence();
+                                game_time = last_game_time;
+                            }
+                        }
+                        
+                    }
+                    else if(game_state!=STATS){
                         game_state = STARTED;
                         cursor_visible = 0; // Show cursor when game starts
                         uint8_t make;
@@ -569,8 +700,10 @@ int (main_interrupt_handler)(){
                     
                         if (byte_index == 3) {
                             mouse_bytes_to_packet();
+                            // mouse_print_packet(&mouse_packet);
 
-                            time_button_handler(mouse_x, mouse_y, &cur_word_count, &last_game_time);
+                            time_button_handler(mouse_x, mouse_y);
+                            language_button_handler(mouse_x, mouse_y, last_game_time);
                             
                             // Update cursor position
                             mouse_x += mouse_packet.delta_x;
@@ -610,7 +743,6 @@ int (main_interrupt_handler)(){
             // int cur_wpm = (cur_word_count * 60) / used_time;
             // int accuracy = (100 * correct_words) / (correct_words + wrong_words);
 
-            
             wrong_words = 0;    
             correct_words = 0;
             cur_word_count = 0;
