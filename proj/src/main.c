@@ -83,63 +83,106 @@ int main(int argc, char *argv[]) {
  *
 */
 
-int (code_to_word)() {
+int (code_to_word)(){
     int len = strlen(cur_typed_word);
-
-    switch (cur_scancode) {
-        case 0x0E:  // Backspace
-            if (len > 0) {
-                cur_typed_word[len - 1] = '\0';
-            }
-            return 0;
-        case 0x39:  // Spacebar
-            if (len == 0) return 0;  // Ignore space if nothing is typed
-            return 1;  // End of word
-        default:
-            break;
+    if (len < MAX_WORD_SIZE -1){
+        switch (cur_scancode){
+            //this is the case of spacebar
+            case 0x39:
+                //não vamos aceitar o input de uma string vazia
+                if(len == 0){
+                    return 0;
+                }
+                //palavra aceite
+                return 1;
+            case 0x1E:
+                cur_typed_word[len] = 'a';
+                return 0;
+            case 0x30:
+                cur_typed_word[len] = 'b';
+                return 0;
+            case 0x2E:
+                cur_typed_word[len] = 'c';
+                return 0;
+            case 0x20:
+                cur_typed_word[len] = 'd';
+                return 0;
+            case 0x12:
+                cur_typed_word[len] = 'e';
+                return 0;
+            case 0x21:
+                cur_typed_word[len] = 'f';
+                return 0;
+            case 0x22:
+                cur_typed_word[len] = 'g';
+                return 0;
+            case 0x23:
+                cur_typed_word[len] = 'h';
+                return 0;
+            case 0x17:
+                cur_typed_word[len] = 'i';
+                return 0;
+            case 0x24:
+                cur_typed_word[len] = 'j';
+                return 0;
+            case 0x25:
+                cur_typed_word[len] = 'k';
+                return 0;
+            case 0x26:
+                cur_typed_word[len] = 'l';
+                return 0;
+            case 0x32:
+                cur_typed_word[len] = 'm';
+                return 0;
+            case 0x31:
+                cur_typed_word[len] = 'n';
+                return 0;
+            case 0x18:
+                cur_typed_word[len] = 'o';
+                return 0;
+            case 0x19:
+                cur_typed_word[len] = 'p';
+                return 0;
+            case 0x10:
+                cur_typed_word[len] = 'q';
+                return 0;
+            case 0x13:
+                cur_typed_word[len] = 'r';
+                return 0;
+            case 0x1f:
+                cur_typed_word[len] = 's';
+                return 0;
+            case 0x14:
+                cur_typed_word[len] = 't';
+                return 0;
+            case 0x16:
+                cur_typed_word[len] = 'u';
+                return 0;
+            case 0x2f:
+                cur_typed_word[len] = 'v';
+                return 0;
+            case 0x11:
+                cur_typed_word[len] = 'w';
+                return 0;
+            case 0x2d:
+                cur_typed_word[len] = 'x';
+                return 0;
+            case 0x15:
+                cur_typed_word[len] = 'y';
+                return 0;
+            case 0x2c:
+                cur_typed_word[len] = 'z';
+                return 0;
+            default:
+                break;
+        }
     }
-
-    if (len >= MAX_WORD_SIZE - 1) {
-        return -1;  // Limit reached
+    else{
+        //a palavra ta demasiado grande
+        return -1;
     }
-
-    char c = 0;
-    switch (cur_scancode) {
-        case 0x1E: c = 'a'; break;
-        case 0x30: c = 'b'; break;
-        case 0x2E: c = 'c'; break;
-        case 0x20: c = 'd'; break;
-        case 0x12: c = 'e'; break;
-        case 0x21: c = 'f'; break;
-        case 0x22: c = 'g'; break;
-        case 0x23: c = 'h'; break;
-        case 0x17: c = 'i'; break;
-        case 0x24: c = 'j'; break;
-        case 0x25: c = 'k'; break;
-        case 0x26: c = 'l'; break;
-        case 0x32: c = 'm'; break;
-        case 0x31: c = 'n'; break;
-        case 0x18: c = 'o'; break;
-        case 0x19: c = 'p'; break;
-        case 0x10: c = 'q'; break;
-        case 0x13: c = 'r'; break;
-        case 0x1F: c = 's'; break;
-        case 0x14: c = 't'; break;
-        case 0x16: c = 'u'; break;
-        case 0x2F: c = 'v'; break;
-        case 0x11: c = 'w'; break;
-        case 0x2D: c = 'x'; break;
-        case 0x15: c = 'y'; break;
-        case 0x2C: c = 'z'; break;
-        default:
-            return 0;
-    }
-
-    cur_typed_word[len] = c;
-    cur_typed_word[len + 1] = '\0';  // Always null terminate
     return 0;
 }
-
 
 int (word_checker)(int n){
     char word_to_compare[MAX_WORD_SIZE];
@@ -310,11 +353,13 @@ int (main_interrupt_handler)(){
     swap_buffers();
 
 
+    /*
    //aqui
     for(int x = 0; x<MAX_GAME_WORDS; x++){
         printf(" %s", word_list[x].word);
     }
     printf("\n");
+    */
 
     while(game_state != EXIT) {
         //cur_word_count < total_words && game_time > 0 && cur_scancode != BREAK_ESQ
@@ -378,8 +423,6 @@ int (main_interrupt_handler)(){
                                     wrong_words++;
                                 }
 
-                                //debug
-                                printf("Word %d: %s \n", cur_word_count, cur_typed_word );
                                 //limpar palavra
                                 memset(cur_typed_word,0,sizeof(cur_typed_word));
                                 cur_word_count++;
@@ -405,7 +448,6 @@ int (main_interrupt_handler)(){
             printf("correct words: %d\n", correct_words);
             printf("used time: %d\n",used_time );
             printf("wpm: %d\n", (cur_word_count*60/used_time));
-            printf("cheguei aqui\n");
             printf("accuracy: %d.%d%%\n", percent, decimal);
             wrong_words = 0;    
             correct_words = 0;
@@ -415,11 +457,13 @@ int (main_interrupt_handler)(){
             word_scrambler();
             game_state = RESETING;
 
+            /*
             //este loop será substituido por representar as palabras no ecra mas por enquanto
             for(int x = 0; x<MAX_GAME_WORDS; x++){
                 printf(" %s", word_list[x].word);
             }
             printf("\n");
+            */
             
         }
 

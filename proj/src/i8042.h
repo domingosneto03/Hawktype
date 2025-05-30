@@ -56,7 +56,7 @@
 
 #define MAX_WORD_SIZE 20
 //para mudar later
-#define MAX_GAME_WORDS 5
+#define MAX_GAME_WORDS 15
 /**@}*/
 
 #endif 

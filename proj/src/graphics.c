@@ -178,7 +178,6 @@ int draw_xpm_title(const char* str, uint16_t x, uint16_t y) {
 int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y, const char* color) {
     int spacing = 15;
     for (size_t i = 0; str[i] != '\0'; i++) {
-        printf("Drawing char: %c at %d,%d\n", str[i], x + i * spacing, y);
         if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] != ' ') {
             if (strcmp(color, "green") == 0) {
                 draw_xpm_sentence_letter_green(str[i], x + i * spacing, y);
