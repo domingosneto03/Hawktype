@@ -17,13 +17,14 @@
 extern vbe_mode_info_t cur_mode_info;
 extern uint8_t cur_scancode;
 extern int timer_counter; 
-int mouse_x = 400;
-int mouse_y = 300;
+int mouse_x = 153;
+int mouse_y = 124;
 extern struct packet mouse_packet;
 uint8_t cursor_visible = 1;
 // --- Textbox layout ---
 int box_width = 400;
 int box_height = 30;
+int game_time = 15;
 
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
@@ -39,6 +40,12 @@ enum wordstate{
     NOTCHECKED,
     CORRECT,
     WRONG,
+};
+
+enum game_times{
+    I15S,
+    I30S,
+    I60S
 };
 
 enum game_languages{
@@ -333,16 +340,87 @@ int draw_input() {
     return 0;
 }
 
-int draw_top_menu() {
-    // int menu_x = 50;
-    // int menu_y = 50;
-    // int menu_width = 200;
-    // int menu_height = 50;
-    
-    // draw_xpm_button_15(menu_x + 10, menu_y + 10); // 15 seconds button 
-    // draw_xpm_button_30(menu_x + 70, menu_y + 10); // 30 seconds button
-    // draw_xpm_button_60(menu_x + 130, menu_y + 10); // 60 seconds button
+const int menu_x = 80;
+const int menu_y = 120;
+const int slogan_start_x = 220;
+const int slogan_start_y = 90;
+const int time_title_x = menu_x + 30;
+const int time_title_y = menu_y;
+const int language_title_x = menu_x + 170;
+const int language_title_y = menu_y;
+const int button_15_x = menu_x + 30;
+const int button_30_x = menu_x + 70;
+const int button_60_x = menu_x + 110;
+const int button_eng_x = menu_x + 170;
+const int button_por_x = menu_x + 240;
+const int button_esp_x = menu_x + 310;
+const int button_y = menu_y + 30;
 
+int draw_top_menu() {
+    int menu_x = 80;
+    int menu_y = 120;
+    
+    draw_xpm_sentence("TEST YOUR TYPING SKILLS", slogan_start_x, slogan_start_y, "default");
+
+    draw_xpm_sentence("Time", time_title_x, time_title_y, "default");
+    draw_button_15(button_15_x, button_y);
+    draw_button_30(button_30_x, button_y); 
+    draw_button_60(button_60_x, button_y);
+
+    draw_xpm_sentence("Language", menu_x + 170, 120, "default");
+    draw_button_eng(button_eng_x, button_y);
+    draw_button_por(button_por_x, button_y);
+    draw_button_esp(button_esp_x, button_y);
+
+    return 0;
+}
+
+bool button_15_clicked = false;
+bool button_30_clicked = true;
+bool button_60_clicked = false;
+
+int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
+
+    if (x > button_15_x && x < button_15_x + 60 &&
+        y > button_y && y < button_y + 30) {
+        if(!button_15_clicked) {
+            if (mouse_packet.lb) {
+                game_time = 15; 
+                button_15_clicked = true;
+                button_30_clicked = false;
+                button_60_clicked = false;
+                printf("15 seconds selected\n");
+                printf("Game time set to %d seconds\n", game_time);
+            }
+        }
+    } else if (x > button_30_x && x < button_30_x + 60 &&
+               y > button_y && y < button_y + 30) {
+        if(!button_30_clicked) {
+            if (mouse_packet.lb) {
+                game_time = 30; 
+                button_15_clicked = false;
+                button_30_clicked = true;
+                button_60_clicked = false;
+                printf("30 seconds selected\n");
+                printf("Game time set to %d seconds\n", game_time);
+            }
+        }
+    } else if (x > button_60_x && x < button_60_x + 60 &&
+               y > button_y && y < button_y + 30) {
+            if (mouse_packet.lb) {
+                if(!button_60_clicked) {
+                    game_time = 60; 
+                    button_15_clicked = false;
+                    button_30_clicked = false;
+                    button_60_clicked = true;
+                    printf("60 seconds selected\n");
+                }
+            }
+    } else {
+        return -1; // Invalid click
+    }
+
+    // last_game_time = game_time; // Update last_game_time for display purposes
     return 0;
 }
 
@@ -351,12 +429,13 @@ int draw_initial_screen() {
     draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
 
     // Title
-    draw_xpm_title("HAWKTYPE", 200, 30);
+    draw_xpm_title("HAWKTYPE", 250, 30);
     draw_top_menu();
     draw_sentence();
     draw_input();
 
-    draw_mouse_cursor();
+    if (cursor_visible)
+        draw_mouse_cursor();
 
     return 0;
 }
@@ -377,8 +456,6 @@ int (main_interrupt_handler)(){
     int correct_words = 0;
     int wrong_words = 0;
     int final_time = 0;
-
-    int game_time = 15;
     int last_game_time = game_time;
     //int total_words = MAX_GAME_WORDS;
     enum gamestate game_state = WAITING;
@@ -434,6 +511,7 @@ int (main_interrupt_handler)(){
                     kbc_ih();
                     if(game_state!=STATS){
                         game_state = STARTED;
+                        cursor_visible = 0; // Show cursor when game starts
                         uint8_t make;
                         //int num_bytes; 
                         int scan_handler;
@@ -477,30 +555,35 @@ int (main_interrupt_handler)(){
                 if (msg.m_notify.interrupts & irq_mouse) {
                     mouse_ih();
                     mouse_byte_syncing();
-                    if (byte_index == 3) {
-                        mouse_bytes_to_packet();
 
-                        
-                        // Update cursor position
-                        mouse_x += mouse_packet.delta_x;
-                        mouse_y -= mouse_packet.delta_y;  // Invert Y-axis
-                        
-                        // Boundary checking
-                        if (mouse_x < 0) mouse_x = 0;
-                        if (mouse_y < 0) mouse_y = 0;
-                        if (mouse_x > cur_mode_info.XResolution - 16) 
-                            mouse_x = cur_mode_info.XResolution - 16;
-                        if (mouse_y > cur_mode_info.YResolution - 16) 
-                            mouse_y = cur_mode_info.YResolution - 16;
-                        
+                    if (game_state != STARTED) {
+                    
+                        if (byte_index == 3) {
+                            mouse_bytes_to_packet();
 
-                        // Draw the cursor at the new position
-                        
-                        draw_initial_screen(); // Clear the screen
-                        swap_buffers(); // Swap buffers to show the cleared screen
+                            time_button_handler(mouse_x, mouse_y, &cur_word_count, &last_game_time);
+                            
+                            // Update cursor position
+                            mouse_x += mouse_packet.delta_x;
+                            mouse_y -= mouse_packet.delta_y;  // Invert Y-axis
+                            
+                            // Boundary checking
+                            if (mouse_x < 0) mouse_x = 0;
+                            if (mouse_y < 0) mouse_y = 0;
+                            if (mouse_x > cur_mode_info.XResolution - 16) 
+                                mouse_x = cur_mode_info.XResolution - 16;
+                            if (mouse_y > cur_mode_info.YResolution - 16) 
+                                mouse_y = cur_mode_info.YResolution - 16;
+                            
 
-                        byte_index = 0;
+                            // Draw the cursor at the new position
+                            
+                            draw_initial_screen(); // Clear the screen
+                            swap_buffers(); // Swap buffers to show the cleared screen
+
+                            byte_index = 0;
                     }
+                }
                 }
 
                 break;

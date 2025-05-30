@@ -201,13 +201,24 @@ int draw_xpm_cursor(uint16_t x, uint16_t y) {
   return xpm_image_to_screen((xpm_map_t)regular_cursor, x, y);
 }
 
-int draw_xpm_button_15(uint16_t x, uint16_t y) {
+int draw_button_15(uint16_t x, uint16_t y) {
   return xpm_image_to_screen((xpm_map_t)sec_15, x, y);
 }
-int draw_xpm_button_30(uint16_t x, uint16_t y) {
+int draw_button_30(uint16_t x, uint16_t y) {
   return xpm_image_to_screen((xpm_map_t)sec_30, x, y);
 }
-int draw_xpm_button_60(uint16_t x, uint16_t y) {
+int draw_button_60(uint16_t x, uint16_t y) {
   return xpm_image_to_screen((xpm_map_t)sec_60, x, y);
 }
 
+int draw_button_eng(uint16_t x, uint16_t y) {
+  return xpm_image_to_screen((xpm_map_t)eng_xpm, x, y);
+}
+
+int draw_button_por(uint16_t x, uint16_t y) {
+  return xpm_image_to_screen((xpm_map_t)por_xpm, x, y);
+}
+
+int draw_button_esp(uint16_t x, uint16_t y) {
+  return xpm_image_to_screen((xpm_map_t)esp_xpm, x, y);
+}

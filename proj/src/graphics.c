@@ -193,6 +193,24 @@ int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y, const char* color
     return 0;
 }
 
+int draw_xpm_button(xpm_map_t xmp, uint16_t x, uint16_t y) {
+    xpm_image_t image;
+    uint8_t *raw_data = xpm_load(xmp, XPM_8_8_8_8, &image);
+    if (!raw_data) {
+        printf(" -> xpm_load failed\n");
+        return 1;
+    }
+
+    uint32_t *pixel_data = (uint32_t *)raw_data;
+    for (int i = 0; i < image.height; i++) {
+        for (int j = 0; j < image.width; j++) {
+            uint32_t color = pixel_data[i * image.width + j];
+            draw_pixel(x + j, y + i, color);
+        }
+    }
+    return 0;
+}
+
 void swap_buffers() {
     memcpy(main_frame_buffer, secondary_frame_buffer, frame_buffer_size);
 }

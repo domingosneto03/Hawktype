@@ -28,6 +28,11 @@
 #include "xpm_fonts/sec_30.xpm"
 #include "xpm_fonts/sec_60.xpm"
 
+//language buttons
+#include "xpm_fonts/eng.xpm"
+#include "xpm_fonts/por.xpm"
+#include "xpm_fonts/esp.xpm"
+
 
 int (draw_xpm_title_letter)(char c, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter)(char c, uint16_t x, uint16_t y);
@@ -35,9 +40,14 @@ int (draw_xpm_sentence_letter_red)(char c, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter_green)(char c, uint16_t x, uint16_t y);
 
 int (draw_xpm_cursor)(uint16_t x, uint16_t y);
-int (draw_xpm_button_15)(uint16_t x, uint16_t y);
-int (draw_xpm_button_30)(uint16_t x, uint16_t y);
-int (draw_xpm_button_60)(uint16_t x, uint16_t y);
+int (draw_button_15)(uint16_t x, uint16_t y);
+int (draw_button_30)(uint16_t x, uint16_t y);
+int (draw_button_60)(uint16_t x, uint16_t y);
+
+int (draw_button_eng)(uint16_t x, uint16_t y);
+int (draw_button_por)(uint16_t x, uint16_t y);
+int (draw_button_esp)(uint16_t x, uint16_t y);
+
 
 #endif // XPM_FONT_H
 
