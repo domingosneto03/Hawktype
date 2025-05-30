@@ -602,6 +602,7 @@ int (main_interrupt_handler)(){
 
         if(game_state==STATS){
 
+
         
             // float cor_words = correct_words;
             // int percent = (100 * correct_words) / cur_word_count;
@@ -610,7 +611,7 @@ int (main_interrupt_handler)(){
             // int cur_wpm = (cur_word_count * 60) / used_time;
             // int accuracy = (100 * correct_words) / (correct_words + wrong_words);
 
-            
+        
             wrong_words = 0;    
             correct_words = 0;
             cur_word_count = 0;
@@ -643,7 +644,8 @@ int (main_interrupt_handler)(){
 
     }
     vg_exit();
-    //printf("\033[2J\033[H");
+
+    free_buffers();
 
     
     //aqui

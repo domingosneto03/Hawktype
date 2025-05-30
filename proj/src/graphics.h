@@ -33,4 +33,6 @@ int (draw_xpm_numbers)(int n, uint16_t x, uint16_t y);
 
 void (swap_buffers());
 
+void (free_buffers)();
+
 #endif

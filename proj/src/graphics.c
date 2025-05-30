@@ -236,3 +236,7 @@ void swap_buffers() {
     memcpy(main_frame_buffer, secondary_frame_buffer, frame_buffer_size);
 }
 
+void (free_buffers)(){
+    free(main_frame_buffer);
+    free(secondary_frame_buffer);
+}
