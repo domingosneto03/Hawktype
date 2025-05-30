@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
   // [comment this out if you don't want/need/ it]
   lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
 
-  // enables to save the output of printf function calls on a file
+  // enables to save the output of //printf function calls on a file
   // [comment this out if you don't want/need it]
   lcf_log_output("/home/lcom/labs/proj/output.txt");
 
@@ -322,7 +322,7 @@ int draw_sentence(){
   
 
 int draw_input() {
-    int box_x = (cur_mode_info.XResolution - box_width) / 2;
+    int box_x = (cur_mode_info.XResolution - box_width) / 3;
     int box_y = cur_mode_info.YResolution - 80; // e.g. 500 for 600p
 
     // Label
@@ -357,8 +357,6 @@ const int button_esp_x = menu_x + 310;
 const int button_y = menu_y + 30;
 
 int draw_top_menu() {
-    int menu_x = 80;
-    //int menu_y = 120;
     
     draw_xpm_sentence("TEST YOUR TYPING SKILLS", slogan_start_x, slogan_start_y, "default");
 
@@ -375,6 +373,7 @@ int draw_top_menu() {
     return 0;
 }
 
+
 bool button_15_clicked = false;
 bool button_30_clicked = true;
 bool button_60_clicked = false;
@@ -389,8 +388,8 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
                 button_15_clicked = true;
                 button_30_clicked = false;
                 button_60_clicked = false;
-                printf("15 seconds selected\n");
-                printf("Game time set to %d seconds\n", game_time);
+                //printf("15 seconds selected\n");
+                //printf("Game time set to %d seconds\n", game_time);
             }
         }
     } else if (x > button_30_x && x < button_30_x + 60 &&
@@ -401,8 +400,8 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
                 button_15_clicked = false;
                 button_30_clicked = true;
                 button_60_clicked = false;
-                printf("30 seconds selected\n");
-                printf("Game time set to %d seconds\n", game_time);
+                //printf("30 seconds selected\n");
+                //printf("Game time set to %d seconds\n", game_time);
             }
         }
     } else if (x > button_60_x && x < button_60_x + 60 &&
@@ -413,7 +412,7 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
                     button_15_clicked = false;
                     button_30_clicked = false;
                     button_60_clicked = true;
-                    printf("60 seconds selected\n");
+                    //printf("60 seconds selected\n");
                 }
             }
     } else {
@@ -424,13 +423,22 @@ int time_button_handler(int x, int y, int *button_id, int *last_game_time) {
     return 0;
 }
 
-int draw_initial_screen() {
+int draw_timer(int game_time) {
+
+    draw_xpm_sentence("Time left: ", 500, menu_y, "default");
+    draw_xpm_numbers(game_time, 500, button_y);
+
+    return 0;
+}
+
+int draw_initial_screen(int game_time) {
 
     draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
 
     // Title
     draw_xpm_title("HAWKTYPE", 250, 30);
     draw_top_menu();
+    draw_timer(game_time);
     draw_sentence();
     draw_input();
 
@@ -456,6 +464,7 @@ int (main_interrupt_handler)(){
     int correct_words = 0;
     int wrong_words = 0;
     int final_time = 0;
+
     int last_game_time = game_time;
     //int total_words = MAX_GAME_WORDS;
     enum gamestate game_state = WAITING;
@@ -469,22 +478,22 @@ int (main_interrupt_handler)(){
     if(mouse_subscribe_int(&irq_mouse)!=0) return 1;
     // if (timer_set_frequency(0,60)!=0) return 1;
 
-    draw_initial_screen();
+    draw_initial_screen(game_time);
     swap_buffers();
 
 
    //aqui
     for(int x = 0; x<MAX_GAME_WORDS; x++){
-        printf(" %s", word_list[x].word);
+        //printf(" %s", word_list[x].word);
     }
-    printf("\n");
+    //printf("\n");
 
     while(game_state != EXIT) {
         //cur_word_count < total_words && game_time > 0 && cur_scancode != BREAK_ESQ
 
         int r;
         if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
-        printf("driver_receive failed with: %d", r);
+        //printf("driver_receive failed with: %d", r);
         continue;
         }
 
@@ -496,12 +505,12 @@ int (main_interrupt_handler)(){
                         timer_int_handler(); 
                     if (timer_counter%60==0){
                         game_time--;
-                        printf("%d\n",game_time);
+                        //printf("%d\n",game_time);
                     }
 
                     // Update screen (textbox + phrase)
                     //draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
-                    draw_initial_screen();
+                    draw_initial_screen(game_time);
                     swap_buffers();
                 }
 
@@ -528,7 +537,7 @@ int (main_interrupt_handler)(){
                             scan_handler = code_to_word();
 
                             if(scan_handler == -1){
-                                printf("Word size limit reached.");
+                                //printf("Word size limit reached.");
                                 scan_handler = 1;
                             }
                             //caso seja um espaço
@@ -543,7 +552,7 @@ int (main_interrupt_handler)(){
                                 }
 
                                 //debug
-                                printf("Word %d: %s \n", cur_word_count, cur_typed_word );
+                                //printf("Word %d: %s \n", cur_word_count, cur_typed_word );
                                 //limpar palavra
                                 memset(cur_typed_word,0,sizeof(cur_typed_word));
                                 cur_word_count++;
@@ -570,15 +579,11 @@ int (main_interrupt_handler)(){
                             // Boundary checking
                             if (mouse_x < 0) mouse_x = 0;
                             if (mouse_y < 0) mouse_y = 0;
-                            if (mouse_x > cur_mode_info.XResolution - 16) 
-                                mouse_x = cur_mode_info.XResolution - 16;
-                            if (mouse_y > cur_mode_info.YResolution - 16) 
-                                mouse_y = cur_mode_info.YResolution - 16;
                             
 
                             // Draw the cursor at the new position
                             
-                            draw_initial_screen(); // Clear the screen
+                            draw_initial_screen(game_time); // Clear the screen
                             swap_buffers(); // Swap buffers to show the cleared screen
 
                             byte_index = 0;
@@ -596,15 +601,17 @@ int (main_interrupt_handler)(){
         }
 
         if(game_state==STATS){
-            //float cor_words = correct_words;
-            int percent = (100 * correct_words) / cur_word_count;
-            int decimal = (1000 * correct_words) / cur_word_count % 10;
-            int used_time = last_game_time-final_time;
-            printf("wrong words: %d\n", wrong_words);
-            printf("correct words: %d\n", correct_words);
-            printf("used time: %d\n",used_time );
-            printf("wpm: %d\n", (cur_word_count*60/used_time));
-            printf("accuracy: %d.%d%%\n", percent, decimal);
+
+
+        
+            // float cor_words = correct_words;
+            // int percent = (100 * correct_words) / cur_word_count;
+            // int decimal = (1000 * correct_words) / cur_word_count % 10;
+            // int used_time = last_game_time-final_time;
+            // int cur_wpm = (cur_word_count * 60) / used_time;
+            // int accuracy = (100 * correct_words) / (correct_words + wrong_words);
+
+        
             wrong_words = 0;    
             correct_words = 0;
             cur_word_count = 0;
@@ -615,9 +622,9 @@ int (main_interrupt_handler)(){
 
             //este loop será substituido por representar as palabras no ecra mas por enquanto
             for(int x = 0; x<MAX_GAME_WORDS; x++){
-                printf(" %s", word_list[x].word);
+                //printf(" %s", word_list[x].word);
             }
-            printf("\n");
+            //printf("\n");
             
         }
 
@@ -637,8 +644,8 @@ int (main_interrupt_handler)(){
 
     }
     vg_exit();
+
     free_buffers();
-    printf("\033[2J\033[H");
 
     
     //aqui

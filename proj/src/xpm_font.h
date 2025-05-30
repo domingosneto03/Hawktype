@@ -33,6 +33,9 @@
 #include "xpm_fonts/por.xpm"
 #include "xpm_fonts/esp.xpm"
 
+#include "xpm_fonts/xpm_numbers/default.xpm"
+int (draw_xpm_number)(int n, uint16_t x, uint16_t y);
+
 
 int (draw_xpm_title_letter)(char c, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter)(char c, uint16_t x, uint16_t y);

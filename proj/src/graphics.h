@@ -29,6 +29,8 @@ int (draw_xpm_sentence)(const char* str, uint16_t x, uint16_t y, const char* col
 
 int (draw_xpm_cursor)(uint16_t x, uint16_t y);
 
+int (draw_xpm_numbers)(int n, uint16_t x, uint16_t y);
+
 void (swap_buffers());
 
 void (free_buffers)();

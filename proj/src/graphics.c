@@ -42,13 +42,13 @@ int (set_frame_buffer)(uint16_t mode){
 
     main_frame_buffer = vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_buffer_size);
     if (main_frame_buffer == NULL) {
-        printf("Framebuffer mapping failed\n");
+        //printf("Framebuffer mapping failed\n");
         return 1;
     }
 
     secondary_frame_buffer = malloc(frame_buffer_size);
     if (secondary_frame_buffer == NULL) {
-        printf("Failed to allocate secondary buffer\n");
+        //printf("Failed to allocate secondary buffer\n");
         return 1;
     }
 
@@ -151,7 +151,7 @@ int xpm_image_to_screen(xpm_map_t xmp, uint16_t x, uint16_t y) {
     xpm_image_t image;
     uint8_t *raw_data = xpm_load(xmp, XPM_8_8_8_8, &image);
     if (!raw_data) {
-        printf(" -> xpm_load failed\n");
+        //printf(" -> xpm_load failed\n");
         return 1;
     }
 
@@ -197,7 +197,7 @@ int draw_xpm_button(xpm_map_t xmp, uint16_t x, uint16_t y) {
     xpm_image_t image;
     uint8_t *raw_data = xpm_load(xmp, XPM_8_8_8_8, &image);
     if (!raw_data) {
-        printf(" -> xpm_load failed\n");
+        //printf(" -> xpm_load failed\n");
         return 1;
     }
 
@@ -208,6 +208,27 @@ int draw_xpm_button(xpm_map_t xmp, uint16_t x, uint16_t y) {
             draw_pixel(x + j, y + i, color);
         }
     }
+    return 0;
+}
+
+int draw_xpm_numbers(int n, uint16_t x, uint16_t y) {
+    if (n < 0 || n > 999) return 1;
+
+    int spacing = 10;
+
+    if (n >= 100) {
+        draw_xpm_number(n / 100, x, y);
+        draw_xpm_number((n / 10) % 10, x + spacing, y);
+        draw_xpm_number(n % 10, x + 2 * spacing, y);
+    }
+    else if (n >= 10) {
+        draw_xpm_number(n / 10, x, y);
+        draw_xpm_number(n % 10, x + spacing, y);
+    }
+    else {
+        draw_xpm_number(n, x, y);
+    }
+
     return 0;
 }
 
