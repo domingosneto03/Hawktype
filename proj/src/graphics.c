@@ -2,7 +2,9 @@
 #include "xpm_font.h"
 
 vbe_mode_info_t cur_mode_info;
-uint8_t* frame_buf;
+uint8_t *main_frame_buffer;
+uint8_t *secondary_frame_buffer;
+uint32_t frame_buffer_size;
 
 int (set_graphic_mode)(uint16_t submode){
     reg86_t reg86;
@@ -27,19 +29,26 @@ int (set_frame_buffer)(uint16_t mode){
 
     //bytes per pixel
     unsigned int bpp = (cur_mode_info.BitsPerPixel+7)/8;
-    unsigned frame_needed_size = cur_mode_info.XResolution * cur_mode_info.YResolution * bpp;
+    
+    frame_buffer_size = cur_mode_info.XResolution * cur_mode_info.YResolution * bpp;
 
     struct minix_mem_range phy_addr;
     phy_addr.mr_base = cur_mode_info.PhysBasePtr;
-    phy_addr.mr_limit = phy_addr.mr_base + frame_needed_size;
+    phy_addr.mr_limit = phy_addr.mr_base + frame_buffer_size;
 
     if (sys_privctl(SELF, SYS_PRIV_ADD_MEM, &phy_addr)!=0){
         return 1;
     }
 
-    frame_buf = vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_needed_size);
-    if (frame_buf ==NULL){
+    main_frame_buffer = vm_map_phys(SELF, (void*) phy_addr.mr_base, frame_buffer_size);
+    if (main_frame_buffer == NULL) {
         printf("Framebuffer mapping failed\n");
+        return 1;
+    }
+
+    secondary_frame_buffer = malloc(frame_buffer_size);
+    if (secondary_frame_buffer == NULL) {
+        printf("Failed to allocate secondary buffer\n");
         return 1;
     }
 
@@ -66,7 +75,7 @@ int normalization_color(uint32_t color, uint32_t *new_color) {
 
 int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
 
-    if (frame_buf == NULL) return 1;
+    if (secondary_frame_buffer == NULL) return 1;
 
     if (x > cur_mode_info.XResolution || y > cur_mode_info.YResolution){
         //we don't check if is smaller than 0 'cause is an unsigned number
@@ -74,14 +83,13 @@ int (draw_pixel)(uint16_t x,uint16_t y,uint32_t color){
     }
 
     unsigned int bpp = (cur_mode_info.BitsPerPixel + 7) / 8;
-
-    unsigned int pixel_index = (cur_mode_info.XResolution * y + x)* bpp;
-    if (pixel_index >= cur_mode_info.XResolution * cur_mode_info.YResolution * bpp) return 1;
+    unsigned int pixel_index = (cur_mode_info.XResolution * y + x) * bpp;
+    if (pixel_index >= frame_buffer_size) return 1;
 
     uint32_t norm_color;
     normalization_color(color, &norm_color);
 
-    if (memcpy(&frame_buf[pixel_index], &norm_color, bpp) == NULL) {
+    if (memcpy(&secondary_frame_buffer[pixel_index], &norm_color, bpp) == NULL) {
         return 1;
     }
     return 0;
@@ -183,4 +191,31 @@ int draw_xpm_sentence(const char* str, uint16_t x, uint16_t y, const char* color
         }
     }
     return 0;
+}
+
+int draw_xpm_button(xpm_map_t xmp, uint16_t x, uint16_t y) {
+    xpm_image_t image;
+    uint8_t *raw_data = xpm_load(xmp, XPM_8_8_8_8, &image);
+    if (!raw_data) {
+        printf(" -> xpm_load failed\n");
+        return 1;
+    }
+
+    uint32_t *pixel_data = (uint32_t *)raw_data;
+    for (int i = 0; i < image.height; i++) {
+        for (int j = 0; j < image.width; j++) {
+            uint32_t color = pixel_data[i * image.width + j];
+            draw_pixel(x + j, y + i, color);
+        }
+    }
+    return 0;
+}
+
+void swap_buffers() {
+    memcpy(main_frame_buffer, secondary_frame_buffer, frame_buffer_size);
+}
+
+void (free_buffers)(){
+    free(main_frame_buffer);
+    free(secondary_frame_buffer);
 }
