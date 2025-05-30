@@ -90,7 +90,7 @@ int (code_to_word)(){
             //this is the case of spacebar
             case 0x0E:
                 if (len!=0){
-                    cur_typed_word[len-1] = '\n';
+                    cur_typed_word[len-1] = 0x00;
                 }
                 return 0;
             case 0x39:
