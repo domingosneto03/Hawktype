@@ -33,6 +33,15 @@ enum wordstate{
     WRONG,
 };
 
+enum game_languages{
+    ENG,
+    PT,
+    ESP
+};
+
+enum game_languages cur_game_lang = ENG;
+
+
 struct words{
     char word[MAX_WORD_SIZE]; 
     enum wordstate state;
@@ -201,22 +210,61 @@ void (word_scrambler)(){
         //fazer com que a cada iteração escolha um dos 3 word_banks
         //vai ser sempre : 1 2 3 1 2 3 1 2 3
         int word_bank = i % 3 + 1;
-        int random_index = rand() % 492;
+        int random_index = rand() % 491;
         struct words next_word;
         
-        if(word_bank == 1){
-            strcpy(next_word.word, word_bank1[random_index]);
-            next_word.state = NOTCHECKED;
-        }
-        else if(word_bank == 2){
-            strcpy(next_word.word, word_bank2[random_index]);
-            next_word.state = NOTCHECKED;
-        }
-        else if(word_bank == 3){
-            strcpy(next_word.word, word_bank3[random_index]);
-            next_word.state = NOTCHECKED;
-        }
-        word_list[i] = next_word;
+        switch (cur_game_lang){
+            case ENG:
+                if(word_bank == 1){
+                    strcpy(next_word.word, eng_word_bank1[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 2){
+                    strcpy(next_word.word, eng_word_bank2[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 3){
+                    strcpy(next_word.word, eng_word_bank3[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                word_list[i] = next_word;
+                break;
+
+            case PT:
+                if(word_bank == 1){
+                    strcpy(next_word.word, pt_word_bank1[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 2){
+                    strcpy(next_word.word, pt_word_bank2[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 3){
+                    strcpy(next_word.word, pt_word_bank3[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                word_list[i] = next_word;
+                break;
+
+            case ESP:
+                if(word_bank == 1){
+                    strcpy(next_word.word, esp_word_bank1[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 2){
+                    strcpy(next_word.word, esp_word_bank2[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 3){
+                    strcpy(next_word.word, esp_word_bank3[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                word_list[i] = next_word;
+                break;
+            default:
+                break;
+            }
+    
     }
 }
 
