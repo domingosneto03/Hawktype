@@ -37,6 +37,15 @@ enum wordstate{
     WRONG,
 };
 
+enum game_languages{
+    ENG,
+    PT,
+    ESP
+};
+
+enum game_languages cur_game_lang = ENG;
+
+
 struct words{
     char word[MAX_WORD_SIZE]; 
     enum wordstate state;
@@ -205,22 +214,61 @@ void (word_scrambler)(){
         //fazer com que a cada iteração escolha um dos 3 word_banks
         //vai ser sempre : 1 2 3 1 2 3 1 2 3
         int word_bank = i % 3 + 1;
-        int random_index = rand() % 492;
+        int random_index = rand() % 491;
         struct words next_word;
         
-        if(word_bank == 1){
-            strcpy(next_word.word, word_bank1[random_index]);
-            next_word.state = NOTCHECKED;
-        }
-        else if(word_bank == 2){
-            strcpy(next_word.word, word_bank2[random_index]);
-            next_word.state = NOTCHECKED;
-        }
-        else if(word_bank == 3){
-            strcpy(next_word.word, word_bank3[random_index]);
-            next_word.state = NOTCHECKED;
-        }
-        word_list[i] = next_word;
+        switch (cur_game_lang){
+            case ENG:
+                if(word_bank == 1){
+                    strcpy(next_word.word, eng_word_bank1[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 2){
+                    strcpy(next_word.word, eng_word_bank2[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 3){
+                    strcpy(next_word.word, eng_word_bank3[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                word_list[i] = next_word;
+                break;
+
+            case PT:
+                if(word_bank == 1){
+                    strcpy(next_word.word, pt_word_bank1[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 2){
+                    strcpy(next_word.word, pt_word_bank2[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 3){
+                    strcpy(next_word.word, pt_word_bank3[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                word_list[i] = next_word;
+                break;
+
+            case ESP:
+                if(word_bank == 1){
+                    strcpy(next_word.word, esp_word_bank1[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 2){
+                    strcpy(next_word.word, esp_word_bank2[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                else if(word_bank == 3){
+                    strcpy(next_word.word, esp_word_bank3[random_index]);
+                    next_word.state = NOTCHECKED;
+                }
+                word_list[i] = next_word;
+                break;
+            default:
+                break;
+            }
+    
     }
 }
 
@@ -230,8 +278,6 @@ int draw_mouse_cursor() {
 
 
 int draw_initial_screen() {
-    if (set_frame_buffer(0x114) != 0) return 1;
-    if (set_graphic_mode(0x114) != 0) return 1;
 
     draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
 
@@ -294,6 +340,8 @@ int draw_initial_screen() {
 
 int (main_interrupt_handler)(){
 
+    if (set_frame_buffer(0x114) != 0) return 1;
+    if (set_graphic_mode(0x114) != 0) return 1;
     int ipc_status;
     uint8_t irq_keyboard;
     uint8_t irq_timer = 0; //add other iqrs as needed
@@ -321,6 +369,7 @@ int (main_interrupt_handler)(){
     // if (timer_set_frequency(0,60)!=0) return 1;
 
     draw_initial_screen();
+    swap_buffers();
 
 
    //aqui
@@ -352,6 +401,7 @@ int (main_interrupt_handler)(){
                     // Update screen (textbox + phrase)
                     //draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
                     draw_initial_screen();
+                    swap_buffers();
                 }
 
 
