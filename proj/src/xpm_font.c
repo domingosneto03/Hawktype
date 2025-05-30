@@ -195,6 +195,22 @@ int draw_xpm_sentence_letter_green(char c, uint16_t x, uint16_t y) {
   }
 }
 
+int (draw_xpm_number)(int n, uint16_t x, uint16_t y){
+  switch (n) {
+    case 0: return xpm_image_to_screen((xpm_map_t)zero_xpm, x, y);
+    case 1: return xpm_image_to_screen((xpm_map_t)one_xpm, x, y);
+    case 2: return xpm_image_to_screen((xpm_map_t)two_xpm, x, y);
+    case 3: return xpm_image_to_screen((xpm_map_t)three_xpm, x, y);
+    case 4: return xpm_image_to_screen((xpm_map_t)four_xpm, x, y);
+    case 5: return xpm_image_to_screen((xpm_map_t)five_xpm, x, y);
+    case 6: return xpm_image_to_screen((xpm_map_t)six_xpm, x, y);
+    case 7: return xpm_image_to_screen((xpm_map_t)seven_xpm, x, y);
+    case 8: return xpm_image_to_screen((xpm_map_t)eight_xpm, x, y);
+    case 9: return xpm_image_to_screen((xpm_map_t)nine_xpm, x, y);
+    default: return 1;
+  }
+}
+
 // nao sei se isto vai funcionar talvez seja preciso criar uma funcao draw_xpm_cursor
 int draw_xpm_cursor(uint16_t x, uint16_t y) {
   // Use the regular_cursor XPM
