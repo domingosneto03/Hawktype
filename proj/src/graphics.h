@@ -27,4 +27,6 @@ int (draw_xpm_title)(const char* str, uint16_t x, uint16_t y);
 
 int (draw_xpm_sentence)(const char* str, uint16_t x, uint16_t y, const char* color);
 
+void (swap_buffers());
+
 #endif

@@ -269,8 +269,6 @@ void (word_scrambler)(){
 }
 
 int draw_initial_screen() {
-    if (set_frame_buffer(0x114) != 0) return 1;
-    if (set_graphic_mode(0x114) != 0) return 1;
 
     draw_rectangle(0, 0, cur_mode_info.XResolution, cur_mode_info.YResolution, 0x1E1E2E);
 
@@ -330,6 +328,8 @@ int draw_initial_screen() {
 
 int (main_interrupt_handler)(){
 
+    if (set_frame_buffer(0x114) != 0) return 1;
+    if (set_graphic_mode(0x114) != 0) return 1;
     int ipc_status;
     uint8_t irq_keyboard;
     uint8_t irq_timer = 0; //add other iqrs as needed
@@ -355,6 +355,7 @@ int (main_interrupt_handler)(){
    // if (timer_set_frequency(0,60)!=0) return 1;
 
     draw_initial_screen();
+    swap_buffers();
 
 
    //aqui
@@ -386,6 +387,7 @@ int (main_interrupt_handler)(){
                     // Update screen (textbox + phrase)
                     //draw_rectangle(0, 90, 1024, 100, 0x000000); // clear phrase/textbox area
                     draw_initial_screen();
+                    swap_buffers();
                 }
 
 
