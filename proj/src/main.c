@@ -13,11 +13,13 @@
 #include "mouse.c"
 
 
-
 extern vbe_mode_info_t cur_mode_info;
 extern uint8_t cur_scancode;
 extern int timer_counter; 
+int mouse_x = 400;
+int mouse_y = 300;
 extern struct packet mouse_packet;
+uint8_t cursor_visible = 1;
 
 char cur_typed_word[MAX_WORD_SIZE] = "";
 
@@ -222,6 +224,11 @@ void (word_scrambler)(){
     }
 }
 
+int draw_mouse_cursor() {
+    return draw_xpm_cursor(mouse_x, mouse_y);
+}
+
+
 int draw_initial_screen() {
     if (set_frame_buffer(0x114) != 0) return 1;
     if (set_graphic_mode(0x114) != 0) return 1;
@@ -276,6 +283,9 @@ int draw_initial_screen() {
 
     // User text
     draw_xpm_sentence(cur_typed_word, box_x + 8, box_y + 8, "default");
+
+    // Draw mouse cursor
+    draw_mouse_cursor();
 
 
     return 0;
@@ -390,19 +400,43 @@ int (main_interrupt_handler)(){
                     }
                 }
                 
-                if (msg.m_notify.interrupts & irq_mouse) { /* subscribed interrupt */
+                if (msg.m_notify.interrupts & irq_mouse) {
                     mouse_ih();
                     mouse_byte_syncing();
-                    if (byte_index==3){
-                      mouse_bytes_to_packet(); 
-                      mouse_print_packet(&mouse_packet);
-                      byte_index = 0;
-                      printf("Mouse packet: lb: %d, mb: %d, rb: %d, x: %d, y: %d\n", 
-                        mouse_packet.lb, mouse_packet.mb, mouse_packet.rb, 
-                        mouse_packet.delta_x, mouse_packet.delta_y);
+                    if (byte_index == 3) {
+                        mouse_bytes_to_packet();
+
+                        
+                        // Update cursor position
+                        int old_x = mouse_x;
+                        int old_y = mouse_y;
+                        mouse_x += mouse_packet.delta_x;
+                        mouse_y -= mouse_packet.delta_y;  // Invert Y-axis
+                        
+                        // Boundary checking
+                        if (mouse_x < 0) mouse_x = 0;
+                        if (mouse_y < 0) mouse_y = 0;
+                        if (mouse_x > cur_mode_info.XResolution - 16) 
+                            mouse_x = cur_mode_info.XResolution - 16;
+                        if (mouse_y > cur_mode_info.YResolution - 16) 
+                            mouse_y = cur_mode_info.YResolution - 16;
+                        
+
+                        printf("Mouse Packet: lb=%d, rb=%d, mb=%d, dx=%d, dy=%d\n",
+                            mouse_packet.lb, mouse_packet.rb, mouse_packet.mb,
+                            mouse_packet.delta_x, mouse_packet.delta_y);
+
+                        printf("Mouse Position: %d,%d -> %d,%d\n", 
+                            old_x, old_y, mouse_x, mouse_y);
+
+                        // Draw the cursor at the new position
+
+                        draw_mouse_cursor();
+
+                        byte_index = 0;
                     }
-                  }
-                          
+                }
+
                 break;
             default:
                 break; /* no other notifications expected: do nothing */	

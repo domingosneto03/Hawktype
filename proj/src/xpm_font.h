@@ -20,10 +20,15 @@
 #include "xpm_fonts/xpm_upper/green.xpm"
 #include "xpm_fonts/xpm_upper/red.xpm"
 
+//mouse cursor
+#include "xpm_fonts/regular_cursor.xpm"
+
 int (draw_xpm_title_letter)(char c, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter)(char c, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter_red)(char c, uint16_t x, uint16_t y);
 int (draw_xpm_sentence_letter_green)(char c, uint16_t x, uint16_t y);
+
+int (draw_xpm_cursor)(uint16_t x, uint16_t y);
 
 #endif // XPM_FONT_H
 
