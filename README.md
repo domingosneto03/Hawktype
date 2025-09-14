@@ -11,7 +11,10 @@ HawkType is a typing game inspired by <a href="https://monkeytype.com/">MonkeyTy
 - Apply concepts of *low-level programming*, *interrupt handling*, and *device drivers*
 
 ## Compile and Run
+To compile and run on Minix via LCF:
 ```bash
 $ make
 $ lcom_run proj
 ```
+![ezgif-2bef07529948e5](https://github.com/user-attachments/assets/5ca34c64-403d-420a-9465-589075625fd4)
+
